@@ -1,9 +1,9 @@
 <?php
-namespace Tectonic\Shift\Modules\Localisation\Translator\Transformers;
+namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
-use Eloquence\Database\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Tectonic\Shift\Modules\Localisation\Contracts\TransformerInterface;
+use Tectonic\Localisation\Contracts\TransformerInterface;
 
 class ModelTransformer implements TransformerInterface
 {
@@ -48,7 +48,7 @@ class ModelTransformer implements TransformerInterface
 
         // Now loop through each of the eagerly loaded relations, and get the resources from them as well
         foreach ($model->getRelations() as $relation) {
-            $collectionResources = with(new CollectionTransformer)->getTranslationResources($relation);
+            $collectionResources = App::make(CollectionTransformer::class)->getTranslationResources($relation);
             $resources = $this->mergeResources($resources, $collectionResources);
         }
     }

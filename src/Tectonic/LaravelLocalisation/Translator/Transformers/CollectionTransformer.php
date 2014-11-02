@@ -3,8 +3,6 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
 use Illuminate\Database\Eloquent\Collection;
 use Tectonic\Localisation\Contracts\TransformerInterface;
-use Tectonic\Localisation\Services\Localiser;
-use Tests\Acceptance\Modules\Localisation\Services\LocaliserTest;
 
 class CollectionTransformer extends Transformer implements TransformerInterface
 {
