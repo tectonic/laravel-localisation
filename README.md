@@ -33,6 +33,20 @@ The translator will decorate the $content object with the fields that have been 
  
  This will return the content object with only the en_GB translations attached.
  
- It should be noted that the translator and transformers do not actually (and should not) change the model's fields. This pattern is used and designed from the perspective of users being able to change the languages and translations available to them via some sort of UI implementation - not via Laravel config files (which is already handled by Laravel for you).
- 
- As a result, models (resources) should not be designed with the view that their properties will change. For example, say you have a content model and it has a title and description that you want to have multi-lingual support for. The content model should not, in fact - actually have these properties defined. These are fields that can be populated via the Translation model and associated table.
+It should be noted that the translator and transformers do not actually (and should not) change the model's fields. This pattern is used and designed from the perspective of users being able to change the languages and translations available to them via some sort of UI implementation - not via Laravel config files (which is already handled by Laravel for you).
+
+As a result, models (resources) should not be designed with the view that their properties will change. For example, say you have a content model and it has a title and description that you want to have multi-lingual support for. The content model should not, in fact - actually have these properties defined. These are fields that can be populated via the Translation model and associated table.
+
+# License
+
+The MIT License (MIT)
+[OSI Approved License]
+The MIT License (MIT)
+
+Copyright (c) 2014 Tectonic Digital
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
