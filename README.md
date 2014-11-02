@@ -32,3 +32,7 @@ The translator will decorate the $content object with the fields that have been 
      Translator::translate($content, 'en_GB');
  
  This will return the content object with only the en_GB translations attached.
+ 
+ It should be noted that the translator and transformers do not actually (and should not) change the model's fields. This pattern is used and designed from the perspective of users being able to change the languages and translations available to them via some sort of UI implementation - not via Laravel config files (which is already handled by Laravel for you).
+ 
+ As a result, models (resources) should not be designed with the view that their properties will change. For example, say you have a content model and it has a title and description that you want to have multi-lingual support for. The content model should not, in fact - actually have these properties defined. These are fields that can be populated via the Translation model and associated table.

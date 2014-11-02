@@ -19,8 +19,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Tectonic\\LaravelLocalisation\\": "src/Tectonic/LaravelLocalisation",
-			"Tests\\": "tests/Tests"
+			"Tectonic\\LaravelLocalisation\\": "src/Tectonic/LaravelLocalisation/",
+			"Tests\\": "tests/"
 		}
 	},
 	"minimum-stability": "dev"
