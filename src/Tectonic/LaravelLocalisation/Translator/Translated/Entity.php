@@ -1,15 +1,11 @@
 <?php
 namespace Tectonic\LaravelLocalisation\Translator\Translated;
 
-class Entity
-{
-    /**
-     * Stores the values, translations.etc. for a given entity.
-     *
-     * @var array
-     */
-    private $attributes = [];
+use Illuminate\Support\Contracts\ArrayableInterface;
+use Illuminate\Support\Contracts\JsonableInterface;
 
+class Entity implements ArrayableInterface, JsonableInterface
+{
     /**
      * Stores all the translations, grouped by language.
      *
@@ -24,7 +20,7 @@ class Entity
      */
     public function __construct(array $attributes = [])
     {
-        $this->attributes = $attributes;
+        $this->setAttributes($attributes);
     }
 
     /**
@@ -53,7 +49,7 @@ class Entity
             $this->$field = [];
         }
 
-        $this->$field[$languageCode] = $value;
+        $this->{$field}[$languageCode] = $value;
     }
 
     /**
@@ -75,35 +71,46 @@ class Entity
     }
 
     /**
-     * Set an attribute.
+     * Set the attributes on the entity.
      *
-     * @param $attribute
-     * @param $value
+     * @param $attributes
      */
-    public function __set($attribute, $value)
+    private function setAttributes($attributes)
     {
-        $this->attributes[$attribute] = $value;
+        foreach ($attributes as $key => $value) {
+            // Translations is protected
+            if ($key == 'translations') continue;
+
+            $this->$key = $value;
+        }
     }
 
     /**
-     * Get an attribute.
+     * Get the instance as an array.
      *
-     * @param $attribute
-     * @return mixed
+     * @return array
      */
-    public function __get($attribute)
+    public function toArray()
     {
-        return $this->attributes[$attribute];
+        $array = get_object_vars($this);
+
+        foreach ($array as &$item) {
+            if ($item instanceof Collection) {
+                $item = $item->toArray();
+            }
+        }
+
+        return $array;
     }
 
     /**
-     * Check to see if an attribute is set.
+     * Convert the object to its JSON representation.
      *
-     * @param $attribute
-     * @return bool
+     * @param  int $options
+     * @return string
      */
-    public function __isset($attribute)
+    public function toJson($options = 0)
     {
-        return isset($this->attributes[$attribute]);
+        return json_decode($this->toArray(), $options);
     }
 }

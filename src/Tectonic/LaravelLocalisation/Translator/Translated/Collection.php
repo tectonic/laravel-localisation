@@ -5,7 +5,12 @@ use Illuminate\Support\Collection as BaseCollection;
 
 class Collection extends BaseCollection
 {
-	public function add(Entity $entity)
+    /**
+     * Add a new translated entity to the item list.
+     *
+     * @param Entity $entity
+     */
+    public function add(Entity $entity)
     {
         $this->push($entity);
     }

@@ -15,4 +15,18 @@ class EntityTest extends TestCase
     {
         $this->assertEquals('Me', $this->entity->name);
     }
+
+    public function testAttributeSetting()
+    {
+        $this->entity->address = 'Some place';
+
+        $this->assertEquals('Some place', $this->entity->address);
+    }
+
+    public function testFieldTranslationApplication()
+    {
+        $this->entity->applyTranslation('en_GB', 'eyeColour', 'Hazel');
+
+        $this->assertEquals(['en_GB' => 'Hazel'], $this->entity->eyeColour);
+    }
 }
