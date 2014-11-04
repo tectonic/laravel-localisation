@@ -30,7 +30,7 @@ class TranslationRepository implements TranslationRepositoryInterface
     public function getByResourceCriteria(ResourceCriteria $criteria)
     {
         $resources = $criteria->getResources();
-        $query = $this->model->getQuery();
+        $query = $this->model->select(['*']);
 
         foreach ($resources as $resource) {
             $query->orWhere(function($query) use ($criteria, $resource) {

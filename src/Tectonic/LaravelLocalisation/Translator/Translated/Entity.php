@@ -71,6 +71,16 @@ class Entity implements ArrayableInterface, JsonableInterface
     }
 
     /**
+     * Returns all the translations for each language and field saved to the database.
+     *
+     * @return array
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
      * Set the attributes on the entity.
      *
      * @param $attributes

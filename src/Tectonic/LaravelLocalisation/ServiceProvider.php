@@ -2,10 +2,11 @@
 namespace Tectonic\LaravelLocalisation;
 
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+use Tectonic\LaravelLocalisation\Database\TranslationRepository;
 use Tectonic\LaravelLocalisation\Translator\Transformers\CollectionTransformer;
+use Tectonic\LaravelLocalisation\Translator\Transformers\ModelTransformer;
 use Tectonic\Localisation\Translator\Engine;
 use Tectonic\Localisation\Contracts\TranslationRepositoryInterface;
-use Tectonic\Localisation\Translator\Transformers\ModelTransformer;
 
 class ServiceProvider extends LaravelServiceProvider
 {
@@ -34,9 +35,9 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerModelTransformer()
     {
-        $this->app->bind(ModelTransformer::class, function() {
+        $this->app->bind(ModelTransformer::class, function($app) {
             $modelTransformer = new ModelTransformer;
-            $modelTransformer->setTranslationRepository(App::make(TranslationRepositoryInterface::class));
+            $modelTransformer->setTranslationRepository($app->make(TranslationRepositoryInterface::class));
 
             return $modelTransformer;
         });
@@ -48,9 +49,9 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerCollectionTransformer()
     {
-        $this->app->bind(CollectionTransformer::class, function() {
+        $this->app->bind(CollectionTransformer::class, function($app) {
             $collectionTransformer = new CollectionTransformer;
-            $collectionTransformer->setTranslationRepository($this->app->make(TranslationRepositoryInterface::class));
+            $collectionTransformer->setTranslationRepository($app->make(TranslationRepositoryInterface::class));
 
             return $collectionTransformer;
         });
@@ -61,12 +62,12 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerTranslator()
     {
-        $this->app->singleton('tectonic.localisation.translator', function() {
+        $this->app->singleton('tectonic.localisation.translator', function($app) {
             $translatorEngine = new Engine;
 
             $translatorEngine->registerTransformer(
-                new ModelTransformer,
-                new CollectionTransformer
+                $app->make(ModelTransformer::class),
+                $app->make(CollectionTransformer::class)
             );
 
             return $translatorEngine;

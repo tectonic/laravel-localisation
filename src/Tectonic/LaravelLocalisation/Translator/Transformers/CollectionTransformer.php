@@ -4,6 +4,7 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 use Tectonic\LaravelLocalisation\Translator\Translated\Collection as TranslatedCollection;
 use Illuminate\Database\Eloquent\Collection;
 use Tectonic\Localisation\Contracts\TransformerInterface;
+use Tectonic\Localisation\Translator\Transformers\Transformer;
 
 class CollectionTransformer extends Transformer implements TransformerInterface
 {
@@ -38,7 +39,7 @@ class CollectionTransformer extends Transformer implements TransformerInterface
      * @param $collection
      * @return array
      */
-    public function getTranslationResources($collection)
+    public function getTranslationResources(Collection $collection)
     {
         $resources = [];
 

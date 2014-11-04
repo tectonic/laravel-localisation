@@ -5,8 +5,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Tectonic\Localisation\Contracts\TransformerInterface;
 use Tectonic\LaravelLocalisation\Translator\Translated\Entity;
+use Tectonic\Localisation\Translator\Transformers\Transformer;
 
-class ModelTransformer implements TransformerInterface
+class ModelTransformer extends Transformer implements TransformerInterface
 {
     /**
      * Implementations should take an object as a parameter, and then respond with a boolean
@@ -45,10 +46,12 @@ class ModelTransformer implements TransformerInterface
         $resources = [class_basename($model) => [$model->id]];
 
         // Now loop through each of the eagerly loaded relations, and get the resources from them as well
-        foreach ($model->getRelations() as $relation) {
-            $collectionResources = App::make(CollectionTransformer::class)->getTranslationResources($relation);
+        foreach ($model->getRelations() as $collection) {
+            $collectionResources = with(new CollectionTransformer)->getTranslationResources($collection);
             $resources = $this->mergeResources($resources, $collectionResources);
         }
+
+        return $resources;
     }
 
     /**
@@ -64,7 +67,7 @@ class ModelTransformer implements TransformerInterface
         $entity = new Entity($model->getAttributes());
 
         foreach ($translations as $translation) {
-            if (!($translation->resource == class_basename($model) && $translation->foreignId == $model->id)) continue;
+            if (!($translation->resource == class_basename($model) && $translation->foreign_id == $model->id)) continue;
 
             $entity->applyTranslation($translation->language, $translation->field, $translation->value);
         }

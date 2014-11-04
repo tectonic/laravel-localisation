@@ -2,6 +2,7 @@
 namespace Tests;
 
 use Orchestra\Testbench\TestCase;
+use Tectonic\LaravelLocalisation\ServiceProvider;
 
 class AcceptanceTestCase extends TestCase
 {
@@ -12,9 +13,15 @@ class AcceptanceTestCase extends TestCase
         parent::setUp();
 
         $artisan = $this->app->make('artisan');
+
         $artisan->call('migrate', [
             '--database' => 'test',
-            '--path'     => 'src/migrations',
+            '--path'     => 'src/migrations'
+        ]);
+
+        $artisan->call('migrate', [
+            '--database' => 'test',
+            '--path'     => 'tests/Fixtures/migrations'
         ]);
 
         $this->init();
@@ -36,5 +43,10 @@ class AcceptanceTestCase extends TestCase
             'database' => ':memory:',
             'prefix'   => '',
         ));
+    }
+
+    protected function getPackageProviders()
+    {
+        return [ServiceProvider::class];
     }
 }
