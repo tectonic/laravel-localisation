@@ -1642,12 +1642,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tectonic/localisation.git",
-                "reference": "6a66086d55e6737fc64c75600e2ccc352402f59f"
+                "reference": "7aabf84e07de78b69980db2c5bcf39d5f1bd4a77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tectonic/localisation/zipball/6a66086d55e6737fc64c75600e2ccc352402f59f",
-                "reference": "6a66086d55e6737fc64c75600e2ccc352402f59f",
+                "url": "https://api.github.com/repos/tectonic/localisation/zipball/7aabf84e07de78b69980db2c5bcf39d5f1bd4a77",
+                "reference": "7aabf84e07de78b69980db2c5bcf39d5f1bd4a77",
                 "shasum": ""
             },
             "require": {
@@ -1672,7 +1672,7 @@
                 }
             ],
             "description": "A localisation/translation package for models, entities and collections in your chosen framework.",
-            "time": "2014-11-02 22:19:40"
+            "time": "2014-11-04 16:12:13"
         }
     ],
     "packages-dev": [

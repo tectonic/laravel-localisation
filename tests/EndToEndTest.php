@@ -3,6 +3,7 @@ namespace Tests;
 
 use Tectonic\LaravelLocalisation\Database\Translation;
 use Tectonic\LaravelLocalisation\Facades\Translator;
+use Tectonic\LaravelLocalisation\Translator\Transformers\ModelTransformer;
 use Tests\Fixtures\Models\Category;
 use Tests\Fixtures\Models\Content;
 
@@ -27,6 +28,15 @@ class EndToEndTest extends AcceptanceTestCase
 
         // Now let's setup translations for various pieces of categories and content
         $this->createTranslations();
+    }
+
+    public function testTranslationsForCollectionRelationships()
+    {
+        $category = Category::with('content')->find($this->category1->id);
+        $translated = Translator::translate($category);
+
+        $this->assertCount(2, $translated->content);
+        $this->assertEquals('This is what we shall do', $translated->content[0]->title['en_GB']);
     }
 
     public function testTranslationRetrievalForCategoriesOnly()

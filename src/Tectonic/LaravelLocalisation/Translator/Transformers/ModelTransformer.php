@@ -47,8 +47,8 @@ class ModelTransformer extends Transformer implements TransformerInterface
 
         // Now loop through each of the eagerly loaded relations, and get the resources from them as well
         foreach ($model->getRelations() as $item) {
-            $collectionResources = $this->resolveTransformer($item)->getTranslationResources($item);
-            $resources = $this->mergeResources($resources, $collectionResources);
+            $newResources = $this->resolveTransformer($item)->getTranslationResources($item);
+            $resources = $this->mergeResources($resources, $newResources);
         }
 
         return $resources;
