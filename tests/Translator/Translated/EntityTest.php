@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Translator\Translated;
 
+use Tectonic\LaravelLocalisation\Translator\Translated\Entity;
 use Tests\TestCase;
 
 class EntityTest extends TestCase
