@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Tectonic\Localisation\Contracts\TransformerInterface;
 use Tectonic\LaravelLocalisation\Translator\Translated\Entity;
 use Tectonic\Localisation\Translator\Transformers\Transformer;
+use Tectonic\Localisation\Translator\Translatable;
 
 class ModelTransformer extends Transformer implements TransformerInterface
 {
@@ -43,7 +44,7 @@ class ModelTransformer extends Transformer implements TransformerInterface
      */
     public function getTranslationResources(Model $model)
     {
-        $resources = [class_basename($model) => [$model->id]];
+        $resources = $this->baseResources($model);
 
         // Now loop through each of the eagerly loaded relations, and get the resources from them as well
         foreach ($model->getRelations() as $item) {
@@ -66,6 +67,10 @@ class ModelTransformer extends Transformer implements TransformerInterface
     {
         $entity = new Entity($model->getAttributes());
 
+        if (!$this->isTranslatable($model)) {
+            return $entity;
+        }
+
         foreach ($translations as $translation) {
             if (!($translation->resource == class_basename($model) && $translation->foreign_id == $model->id)) continue;
 
@@ -80,6 +85,23 @@ class ModelTransformer extends Transformer implements TransformerInterface
         return $entity;
     }
 
+    /**
+     * Pulls in the base resources for the model. If the model is translatable, it will fetch
+     * the translatable resource name (the base class name) and then use this as the key for the
+     * array of ids that will be used to search for translations
+     *
+     * @param $model
+     * @return array
+     */
+    private function baseResources($model)
+    {
+        if ($this->isTranslatable($model)) {
+            return [$model->getResourceName() => [$model->id]];
+        }
+
+        return [];
+    }
+
     private function resolveTransformer($item)
     {
         if ($item instanceof Collection) {
@@ -89,6 +111,17 @@ class ModelTransformer extends Transformer implements TransformerInterface
         if ($item instanceof Model) {
             return new ModelTransformer;
         }
+    }
+
+    /**
+     * Determines whether or not a model has translatable properties.
+     *
+     * @param Model $model
+     * @return bool
+     */
+    private function isTranslatable(Model $model)
+    {
+        return in_array(Translatable::class, class_uses($model));
     }
 }
  
