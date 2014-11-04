@@ -13,14 +13,14 @@ class TranslationRepositoryTest extends AcceptanceTestCase
     protected function init()
     {
         $this->translationRepository = App::make(TranslationRepository::class);
+
+        $this->translationRepository->create('en_GB', 'Content', 1, 'title', 'This is how you spell colour.');
+        $this->translationRepository->create('en_US', 'Content', 1, 'title', 'This is how you spell color.');
+        $this->translationRepository->create('en_US', 'Content', 2, 'description', 'Random description text.');
     }
 
     public function testResourceCriteriaSearch()
     {
-        $this->translationRepository->create('en_GB', 'Content', 1, 'title', 'This is how you spell colour.');
-        $this->translationRepository->create('en_US', 'Content', 1, 'title', 'This is how you spell color.');
-        $this->translationRepository->create('en_US', 'Content', 2, 'description', 'Random description text.');
-
         $resourceCriteria = new ResourceCriteria;
         $resourceCriteria->addResource('Content');
         $resourceCriteria->addId('Content', 1);
@@ -29,6 +29,8 @@ class TranslationRepositoryTest extends AcceptanceTestCase
 
         $this->assertCount(2, $translations);
         $this->assertEquals('This is how you spell colour.', $translations[0]->value);
+        $this->assertEquals('en_GB', $translations[0]->language);
         $this->assertEquals('This is how you spell color.', $translations[1]->value);
+        $this->assertEquals('en_US', $translations[1]->language);
     }
 }
