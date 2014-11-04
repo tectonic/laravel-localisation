@@ -102,6 +102,12 @@ class ModelTransformer extends Transformer implements TransformerInterface
         return [];
     }
 
+    /**
+     * Deciphers the transformer that can be used for the $item in question.
+     *
+     * @param $item
+     * @return CollectionTransformer|ModelTransformer
+     */
     private function resolveTransformer($item)
     {
         if ($item instanceof Collection) {
@@ -111,6 +117,8 @@ class ModelTransformer extends Transformer implements TransformerInterface
         if ($item instanceof Model) {
             return new ModelTransformer;
         }
+
+        throw new \Exception("No transformer found for {get_class($item)}.");
     }
 
     /**
