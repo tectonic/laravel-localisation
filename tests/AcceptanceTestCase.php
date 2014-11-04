@@ -21,7 +21,7 @@ class AcceptanceTestCase extends TestCase
 
         $artisan->call('migrate', [
             '--database' => 'test',
-            '--path'     => 'tests/Fixtures/migrations'
+            '--path'     => 'tests/Fixtures/Migrations'
         ]);
 
         $this->init();
