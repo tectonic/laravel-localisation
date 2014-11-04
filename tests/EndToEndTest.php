@@ -3,7 +3,6 @@ namespace Tests;
 
 use Tectonic\LaravelLocalisation\Database\Translation;
 use Tectonic\LaravelLocalisation\Facades\Translator;
-use Tectonic\LaravelLocalisation\Translator\Transformers\ModelTransformer;
 use Tests\Fixtures\Models\Category;
 use Tests\Fixtures\Models\Content;
 
@@ -30,6 +29,9 @@ class EndToEndTest extends AcceptanceTestCase
         $this->createTranslations();
     }
 
+    /**
+     * Tests the retrieval and assignment of translations for categories.
+     */
     public function testTranslationRetrievalForCategoriesOnly()
     {
         $category = Category::find($this->category1->id);
@@ -41,6 +43,9 @@ class EndToEndTest extends AcceptanceTestCase
         $this->assertArrayHasKey('en_GB', $translated->getTranslations());
     }
 
+    /**
+     * A little more complex, looks at the translated content for content records that have a category.
+     */
     public function testTranslationsForAContentRecordAssignedToACategory()
     {
         $content = Content::with('category')->find($this->content1->id);
@@ -50,6 +55,9 @@ class EndToEndTest extends AcceptanceTestCase
         $this->assertEquals('Tucker', $translated->category->title['en_GB']);
     }
 
+    /**
+     * Tests translations on relationships that have collections.
+     */
     public function testTranslationsForCollectionRelationships()
     {
         $category = Category::with('content')->find($this->category1->id);
@@ -59,6 +67,9 @@ class EndToEndTest extends AcceptanceTestCase
         $this->assertEquals('This is what we shall do', $translated->content[0]->title['en_GB']);
     }
 
+    /**
+     * Tests translations for nested relationship collections.
+     */
     public function testTranslationsForCollectionsOfCollections()
     {
         $categories = Category::with('content')->get();
@@ -69,12 +80,18 @@ class EndToEndTest extends AcceptanceTestCase
         $this->assertEquals('This is what we shall do', $translated[0]->content[0]->title['en_GB']);
     }
 
+    /**
+     * Create the categories necessary for the tests.
+     */
     private function createCategories()
     {
         $this->category1 = Category::create([]);
         $this->category2 = Category::create([]);
     }
 
+    /**
+     * Create the content data required for the tests.
+     */
     private function createContent()
     {
         $this->content1 = $this->category1->content()->save(new Content);
@@ -84,6 +101,9 @@ class EndToEndTest extends AcceptanceTestCase
         $this->content5 = $this->category2->content()->save(new Content);
     }
 
+    /**
+     * Create the translations for categories and content.
+     */
     private function createTranslations()
     {
         Translation::create([
