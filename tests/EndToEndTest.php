@@ -30,15 +30,6 @@ class EndToEndTest extends AcceptanceTestCase
         $this->createTranslations();
     }
 
-    public function testTranslationsForCollectionRelationships()
-    {
-        $category = Category::with('content')->find($this->category1->id);
-        $translated = Translator::translate($category);
-
-        $this->assertCount(2, $translated->content);
-        $this->assertEquals('This is what we shall do', $translated->content[0]->title['en_GB']);
-    }
-
     public function testTranslationRetrievalForCategoriesOnly()
     {
         $category = Category::find($this->category1->id);
@@ -57,6 +48,25 @@ class EndToEndTest extends AcceptanceTestCase
 
         $this->assertEquals('This is what we shall do', $translated->title['en_GB']);
         $this->assertEquals('Tucker', $translated->category->title['en_GB']);
+    }
+
+    public function testTranslationsForCollectionRelationships()
+    {
+        $category = Category::with('content')->find($this->category1->id);
+        $translated = Translator::translate($category);
+
+        $this->assertCount(2, $translated->content);
+        $this->assertEquals('This is what we shall do', $translated->content[0]->title['en_GB']);
+    }
+
+    public function testTranslationsForCollectionsOfCollections()
+    {
+        $categories = Category::with('content')->get();
+        $translated = Translator::translate($categories);
+
+        $this->assertCount(2, $categories);
+        $this->assertEquals('Football', $translated->last()->title['en_GB']);
+        $this->assertEquals('This is what we shall do', $translated[0]->content[0]->title['en_GB']);
     }
 
     private function createCategories()
