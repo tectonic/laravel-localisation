@@ -1,6 +1,7 @@
 <?php
 namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
+use Tectonic\LaravelLocalisation\Translator\Translated\Collection as TranslatedCollection;
 use Illuminate\Database\Eloquent\Collection;
 use Tectonic\Localisation\Contracts\TransformerInterface;
 
@@ -28,7 +29,7 @@ class CollectionTransformer extends Transformer implements TransformerInterface
         $resources = $this->getTranslationResources($collection);
         $translations = $this->getTranslations($resources);
 
-        $this->applyTranslations($collection, $translations);
+        return $this->applyTranslations($collection, $translations);
     }
 
     /**
@@ -57,8 +58,12 @@ class CollectionTransformer extends Transformer implements TransformerInterface
      */
     public function applyTranslations(Collection $collection, Collection $translations)
     {
+        $translatedCollection = new TranslatedCollection;
+
         foreach ($collection as $model) {
-            with(new ModelTransformer)->applyTranslations($model, $translations);
+            $translatedCollection->add(with(new ModelTransformer)->applyTranslations($model, $translations));
         }
+
+        return $translatedCollection;
     }
 }

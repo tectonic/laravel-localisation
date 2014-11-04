@@ -10,4 +10,9 @@ class ModelTransformerTest extends TestCase
     {
         $this->modelTransformer = new ModelTransformer;
     }
+
+    public function testSomething()
+    {
+
+    }
 }

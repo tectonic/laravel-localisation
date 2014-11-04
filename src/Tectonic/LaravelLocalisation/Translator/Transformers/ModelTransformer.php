@@ -4,6 +4,7 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Tectonic\Localisation\Contracts\TransformerInterface;
+use Tectonic\LaravelLocalisation\Translator\Translated\Entity;
 
 class ModelTransformer implements TransformerInterface
 {
@@ -30,7 +31,7 @@ class ModelTransformer implements TransformerInterface
         $resources = $this->getTranslationResources($model);
         $translations = $this->getTranslations($resources);
 
-        $this->applyTranslations($model, $translations);
+        return $this->applyTranslations($model, $translations);
     }
 
     /**
@@ -41,9 +42,6 @@ class ModelTransformer implements TransformerInterface
      */
     public function getTranslationResources(Model $model)
     {
-        // If the model is not translatable, do nothing
-        if (!($model instanceof Translatable)) return;
-
         $resources = [class_basename($model) => [$model->id]];
 
         // Now loop through each of the eagerly loaded relations, and get the resources from them as well
@@ -63,19 +61,20 @@ class ModelTransformer implements TransformerInterface
      */
     public function applyTranslations(Model $model, Collection $translations)
     {
-        // If the model is not translatable, do nothing
-        if (!($model instanceof Translatable)) return;
+        $entity = new Entity($model->getAttributes());
 
         foreach ($translations as $translation) {
             if (!($translation->resource == class_basename($model) && $translation->foreignId == $model->id)) continue;
 
-            $model->applyTranslation($translation->language->code, $translation->field, $translation->value);
+            $entity->applyTranslation($translation->language, $translation->field, $translation->value);
         }
 
         // Now we apply to the translations to each o the model's eagerly-loaded relationships
-        foreach ($model->getRelations() as $collection) {
-            with(new CollectionTransformer)->applyTranslations($collection, $translations);
+        foreach ($model->getRelations() as $relationship => $collection) {
+           $entity->setAttribute($relationship, (new CollectionTransformer)->applyTranslations($collection, $translations));
         }
+
+        return $entity;
     }
 }
  
