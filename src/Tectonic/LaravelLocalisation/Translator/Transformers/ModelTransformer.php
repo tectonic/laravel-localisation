@@ -46,8 +46,8 @@ class ModelTransformer extends Transformer implements TransformerInterface
         $resources = [class_basename($model) => [$model->id]];
 
         // Now loop through each of the eagerly loaded relations, and get the resources from them as well
-        foreach ($model->getRelations() as $collection) {
-            $collectionResources = with(new CollectionTransformer)->getTranslationResources($collection);
+        foreach ($model->getRelations() as $item) {
+            $collectionResources = $this->resolveTransformer($item)->getTranslationResources($item);
             $resources = $this->mergeResources($resources, $collectionResources);
         }
 
@@ -73,11 +73,22 @@ class ModelTransformer extends Transformer implements TransformerInterface
         }
 
         // Now we apply to the translations to each o the model's eagerly-loaded relationships
-        foreach ($model->getRelations() as $relationship => $collection) {
-           $entity->setAttribute($relationship, (new CollectionTransformer)->applyTranslations($collection, $translations));
+        foreach ($model->getRelations() as $relationship => $item) {
+            $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations);
         }
 
         return $entity;
+    }
+
+    private function resolveTransformer($item)
+    {
+        if ($item instanceof Collection) {
+            return new CollectionTransformer;
+        }
+
+        if ($item instanceof Model) {
+            return new ModelTransformer;
+        }
     }
 }
  

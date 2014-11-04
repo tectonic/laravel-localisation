@@ -40,6 +40,15 @@ class EndToEndTest extends AcceptanceTestCase
         $this->assertArrayHasKey('en_GB', $translated->getTranslations());
     }
 
+    public function testTranslationsForAContentRecordAssignedToACategory()
+    {
+        $content = Content::with('category')->find($this->content1->id);
+        $translated = Translator::translate($content);
+
+        $this->assertEquals('This is what we shall do', $translated->title['en_GB']);
+        $this->assertEquals('Tucker', $translated->category->title['en_GB']);
+    }
+
     private function createCategories()
     {
         $this->category1 = Category::create([]);
@@ -87,6 +96,14 @@ class EndToEndTest extends AcceptanceTestCase
             'foreign_id' => $this->category2->id,
             'field' => 'title',
             'value' => 'Soccer'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Content',
+            'foreign_id' => $this->content1->id,
+            'field' => 'title',
+            'value' => 'This is what we shall do'
         ]);
     }
 }
