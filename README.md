@@ -1,5 +1,7 @@
 # Laravel localisation
 
+[![Circle CI](https://circleci.com/gh/tectonic/laravel-localisation.png?style=badge)](https://circleci.com/gh/tectonic/laravel-localisation)
+
 A bridge package for providing Laravel specific components and implementations of the Localisation package.
 
 ## Installation
