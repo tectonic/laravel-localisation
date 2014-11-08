@@ -33,4 +33,20 @@ class TranslationRepositoryTest extends AcceptanceTestCase
         $this->assertEquals('This is how you spell color.', $translations[1]->value);
         $this->assertEquals('en_US', $translations[1]->language);
     }
+
+    public function testGetByParams()
+    {
+        $translations = $this->translationRepository->getByCriteria(['foreign_id' => 1]);
+
+        $this->assertCount(2, $translations);
+        $this->assertEquals('This is how you spell colour.', $translations[0]->value);
+        $this->assertEquals('This is how you spell color.', $translations[1]->value);
+    }
+
+    public function testGetOneByParams()
+    {
+        $translation = $this->translationRepository->getOneByCriteria(['foreign_id' => 1]);
+
+        $this->assertEquals('This is how you spell colour.', $translation->value);
+    }
 }

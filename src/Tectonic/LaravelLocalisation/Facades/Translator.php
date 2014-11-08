@@ -10,5 +10,5 @@ class Translator extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'tectonic.localisation.translator'; }
+    protected static function getFacadeAccessor() { return 'localisation.translator'; }
 }

@@ -62,7 +62,7 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerTranslator()
     {
-        $this->app->singleton('tectonic.localisation.translator', function($app) {
+        $this->app->singleton('localisation.translator', function($app) {
             $translatorEngine = new Engine;
 
             $translatorEngine->registerTransformer(

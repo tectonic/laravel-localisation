@@ -238,12 +238,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "687ad93f18e47fbb530d17f109c9043126dd164c"
+                "reference": "4a066fd85f45668e1e40b2b555b9bf788860aab9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/687ad93f18e47fbb530d17f109c9043126dd164c",
-                "reference": "687ad93f18e47fbb530d17f109c9043126dd164c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/4a066fd85f45668e1e40b2b555b9bf788860aab9",
+                "reference": "4a066fd85f45668e1e40b2b555b9bf788860aab9",
                 "shasum": ""
             },
             "require": {
@@ -345,7 +345,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2014-10-26 23:39:38"
+            "time": "2014-11-05 20:28:44"
         },
         {
             "name": "monolog/monolog",
@@ -512,16 +512,16 @@
         },
         {
             "name": "patchwork/utf8",
-            "version": "v1.1.25",
+            "version": "v1.1.26",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nicolas-grekas/Patchwork-UTF8.git",
-                "reference": "2d43bd047b120279511d45e76e61c5a9812d9a83"
+                "url": "https://github.com/tchwork/utf8.git",
+                "reference": "6b8e46603b49ee87ad6bceb314da94cc04ffcdce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nicolas-grekas/Patchwork-UTF8/zipball/2d43bd047b120279511d45e76e61c5a9812d9a83",
-                "reference": "2d43bd047b120279511d45e76e61c5a9812d9a83",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/6b8e46603b49ee87ad6bceb314da94cc04ffcdce",
+                "reference": "6b8e46603b49ee87ad6bceb314da94cc04ffcdce",
                 "shasum": ""
             },
             "require": {
@@ -552,19 +552,19 @@
             "authors": [
                 {
                     "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com",
-                    "role": "Developer"
+                    "email": "p@tchwork.com"
                 }
             ],
-            "description": "Extensive, portable and performant handling of UTF-8 and grapheme clusters for PHP",
-            "homepage": "https://github.com/nicolas-grekas/Patchwork-UTF8",
+            "description": "Portable and performant UTF-8, Unicode and Grapheme Clusters for PHP",
+            "homepage": "https://github.com/tchwork/utf8",
             "keywords": [
+                "grapheme",
                 "i18n",
                 "unicode",
                 "utf-8",
                 "utf8"
             ],
-            "time": "2014-08-05 08:00:32"
+            "time": "2014-11-08 10:13:25"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -572,12 +572,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "e63fe3fbdfd53431c2483f7714f2615dae685198"
+                "reference": "e540752e9a4b0c61e158be54be0e38be1b2e0aad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/e63fe3fbdfd53431c2483f7714f2615dae685198",
-                "reference": "e63fe3fbdfd53431c2483f7714f2615dae685198",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/e540752e9a4b0c61e158be54be0e38be1b2e0aad",
+                "reference": "e540752e9a4b0c61e158be54be0e38be1b2e0aad",
                 "shasum": ""
             },
             "require": {
@@ -662,7 +662,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2014-10-19 19:32:18"
+            "time": "2014-11-07 12:08:53"
         },
         {
             "name": "predis/predis",
@@ -1642,12 +1642,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tectonic/localisation.git",
-                "reference": "2ba607ccdc59fecf599b0a5703773b4ef17976b9"
+                "reference": "887bfb2b6c0c21597bdb1d8304f90cb02269ad5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tectonic/localisation/zipball/2ba607ccdc59fecf599b0a5703773b4ef17976b9",
-                "reference": "2ba607ccdc59fecf599b0a5703773b4ef17976b9",
+                "url": "https://api.github.com/repos/tectonic/localisation/zipball/887bfb2b6c0c21597bdb1d8304f90cb02269ad5b",
+                "reference": "887bfb2b6c0c21597bdb1d8304f90cb02269ad5b",
                 "shasum": ""
             },
             "require": {
@@ -1672,7 +1672,7 @@
                 }
             ],
             "description": "A localisation/translation package for models, entities and collections in your chosen framework.",
-            "time": "2014-11-04 23:26:30"
+            "time": "2014-11-05 00:00:12"
         }
     ],
     "packages-dev": [

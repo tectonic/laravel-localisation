@@ -66,4 +66,43 @@ class TranslationRepository implements TranslationRepositoryInterface
 
         return $model;
     }
+
+    /**
+     * Retrieves all translations that match the required params.
+     *
+     * @param array $params
+     * @return Collection
+     */
+    public function getByCriteria(array $params)
+    {
+        return $this->getByCriteriaQuery($params)->get();
+    }
+
+    /**
+     * Same as getByCriteria, but only retrieves the first record.
+     *
+     * @param array $params
+     * @return null|Translation
+     */
+    public function getOneByCriteria(array $params)
+    {
+        return $this->getByCriteriaQuery($params)->first();
+    }
+
+    /**
+     * Generates the query builder object required for the get query requests.
+     *
+     * @param array $params
+     * @return QueryBuilder
+     */
+    private function getByCriteriaQuery(array $params)
+    {
+        $query = $this->model->select(['*']);
+
+        foreach ($params as $key => $value) {
+            $query->where($key, '=', $value);
+        }
+
+        return $query;
+    }
 }
