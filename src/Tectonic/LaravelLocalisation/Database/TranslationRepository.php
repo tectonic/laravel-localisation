@@ -71,9 +71,9 @@ class TranslationRepository implements TranslationRepositoryInterface
      * Retrieves all translations that match the required params.
      *
      * @param array $params
-     * @return Collection
+     * @return mixed
      */
-    public function getByCriteria(array $params)
+    public function getByCriteria($params)
     {
         return $this->getByCriteriaQuery($params)->get();
     }
@@ -93,9 +93,9 @@ class TranslationRepository implements TranslationRepositoryInterface
      * Generates the query builder object required for the get query requests.
      *
      * @param array $params
-     * @return QueryBuilder
+     * @return mixed
      */
-    private function getByCriteriaQuery(array $params)
+    private function getByCriteriaQuery($params)
     {
         $query = $this->model->select(['*']);
 
