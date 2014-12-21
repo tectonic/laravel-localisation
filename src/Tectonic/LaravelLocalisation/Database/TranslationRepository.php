@@ -82,11 +82,22 @@ class TranslationRepository implements TranslationRepositoryInterface
      * Same as getByCriteria, but only retrieves the first record.
      *
      * @param array $params
-     * @return null|Translation
+     * @return mixed
      */
-    public function getOneByCriteria(array $params)
+    public function getOneByCriteria($params)
     {
         return $this->getByCriteriaQuery($params)->first();
+    }
+
+    /**
+     * Returns a new instance of the model or entity.
+     * 
+     * @return mixed
+     */
+    public function getNew()
+    {
+
+
     }
 
     /**
