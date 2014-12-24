@@ -1,6 +1,7 @@
 <?php
 namespace src\Tectonic\LaravelLocalisation\Database;
 
+use Tectonic\LaravelLocalisation\Database\TranslationNotFound;
 use Tectonic\Localisation\Contracts\TranslationRepositoryInterface;
 use Tectonic\Localisation\Translator\Translatable;
 
@@ -64,17 +65,22 @@ class TranslationService
         return $translation;
     }
 
+    /**
+     * Update an existing translation record based on the data provided.
+     *
+     * @param Translatable $model
+     * @param $language
+     * @param $field
+     * @param $value
+     * @return null|Translation
+     * @throws TranslationNotFound
+     */
     public function update(Translatable $model, $language, $field, $value)
     {
-        $translation = $this->translationRepository->getByCriteria([
-            'language' => $language,
-            'resource' => $model->getResourceName(),
-            'foreign_id' => $model->getId(),
-            'field' => $field
-        ]);
+        $translation = $this->findForUpdate($model, $language, $field);
 
-        if ($translation) {
-            $translation = $translation[0];
+        if (is_null($translation)) {
+            throw new TranslationNotFound;
         }
 
         $translation->value = $value;
@@ -82,6 +88,49 @@ class TranslationService
         $this->translationRepository->save($translation);
 
         return $translation;
+    }
+
+    /**
+     * Create a new translation record, or update an existing one.
+     *
+     * @param Translatable $model
+     * @param $language
+     * @param $field
+     * @param $value
+     * @return mixed|null|Translation
+     */
+    public function createOrUpdate(Translatable $model, $language, $field, $value)
+    {
+        try {
+            return $this->update($model, $language, $field, $value);
+        }
+        catch (TranslationNotFound $exception) {
+            return $this->create($model, $language, $field, $value);
+        }
+    }
+
+    /**
+     * Attempts to find a translation record that will be used for an update at a later period.
+     *
+     * @param Translatable $model
+     * @param $language
+     * @param $field
+     * @return null|Translation
+     */
+    public function findForUpdate(Translatable $model, $language, $field)
+    {
+        $translations = $this->translationRepository->getByCriteria([
+            'language' => $language,
+            'resource' => $model->getResourceName(),
+            'foreign_id' => $model->getId(),
+            'field' => $field
+        ]);
+
+        if ($translations) {
+            return $translations[0];
+        }
+
+        return null;
     }
 
     /**
@@ -94,6 +143,11 @@ class TranslationService
         $this->translationRepository->delete($translation);
     }
 
+    /**
+     * Deletes a number of translation objects at once.
+     *
+     * @param ...$translations
+     */
     public function deleteAll(...$translations)
     {
         foreach ($translations as $translation) {
