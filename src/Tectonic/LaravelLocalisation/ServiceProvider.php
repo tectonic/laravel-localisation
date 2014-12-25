@@ -5,6 +5,7 @@ use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use Tectonic\LaravelLocalisation\Database\TranslationRepository;
 use Tectonic\LaravelLocalisation\Translator\Transformers\CollectionTransformer;
 use Tectonic\LaravelLocalisation\Translator\Transformers\ModelTransformer;
+use Tectonic\LaravelLocalisation\Translator\Transformers\PaginationTransformer;
 use Tectonic\Localisation\Translator\Engine;
 use Tectonic\Localisation\Contracts\TranslationRepositoryInterface;
 
@@ -67,7 +68,8 @@ class ServiceProvider extends LaravelServiceProvider
 
             $translatorEngine->registerTransformer(
                 $app->make(ModelTransformer::class),
-                $app->make(CollectionTransformer::class)
+                $app->make(CollectionTransformer::class),
+                $app->make(PaginationTransformer::class)
             );
 
             return $translatorEngine;

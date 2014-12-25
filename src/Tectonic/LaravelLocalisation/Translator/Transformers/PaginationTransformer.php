@@ -1,13 +1,11 @@
 <?php
-namespace src\Tectonic\LaravelLocalisation\Translator\Transformers;
+namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
 use Illuminate\Pagination\Paginator;
-use Tectonic\LaravelLocalisation\Translator\Transformers\CollectionTransformer;
 use Tectonic\Localisation\Contracts\TransformerInterface;
 
 class PaginationTransformer implements TransformerInterface
 {
-
     /**
      * Implementations should take an object as a parameter, and then respond with a boolean
      * true or false depending on whether or not they are able to transform that object.
