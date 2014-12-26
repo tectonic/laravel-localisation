@@ -1,6 +1,7 @@
 <?php
 namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
+use App;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\Paginator;
 use Tectonic\Localisation\Contracts\TransformerInterface;
@@ -27,9 +28,11 @@ class PaginationTransformer implements TransformerInterface
      */
     public function transform($object)
     {
-        $transformer = new CollectionTransformer;
+        $transformer = App::make(CollectionTransformer::class);
+
         $originalRecords = new Collection($object->getItems());
         $transformedRecords = $transformer->transform($originalRecords);
+        
         $object->setItems($transformedRecords);
 
         return $object;
