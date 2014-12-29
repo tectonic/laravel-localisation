@@ -16,12 +16,13 @@ class CreateTranslationsTable extends Migration {
         {
             $table->increments('id');
             $table->integer('foreign_id');
-            $table->integer('language')->index();
+            $table->string('language')->index();
             $table->string('resource');
             $table->string('field');
             $table->string('value');
 
             // now setup the required index
+            $table->index(['language', 'resource', 'foreign_id', 'field']);
             $table->index(['resource', 'foreign_id', 'field']);
         });
 	}
