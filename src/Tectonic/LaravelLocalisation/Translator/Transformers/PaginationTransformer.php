@@ -32,7 +32,7 @@ class PaginationTransformer implements TransformerInterface
 
         $originalRecords = new Collection($object->getItems());
         $transformedRecords = $transformer->transform($originalRecords);
-        
+
         $object->setItems($transformedRecords);
 
         return $object;
