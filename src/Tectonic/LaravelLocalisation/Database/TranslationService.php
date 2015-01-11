@@ -174,9 +174,9 @@ class TranslationService
     /**
      * Deletes a number of translation objects at once.
      *
-     * @param ...$translations
+     * @param array $translations
      */
-    public function deleteAll(...$translations)
+    public function deleteAll(array $translations)
     {
         foreach ($translations as $translation) {
             $this->translationRepository->delete($translation);

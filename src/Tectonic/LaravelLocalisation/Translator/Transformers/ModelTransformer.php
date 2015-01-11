@@ -48,6 +48,11 @@ class ModelTransformer extends Transformer implements TransformerInterface
 
         // Now loop through each of the eagerly loaded relations, and get the resources from them as well
         foreach ($model->getRelations() as $item) {
+            // Some relationships can result in null values, so skip over those
+            if (is_null($item)) {
+                continue;
+            }
+
             $newResources = $this->resolveTransformer($item)->getTranslationResources($item);
             $resources = $this->mergeResources($resources, $newResources);
         }
@@ -79,6 +84,10 @@ class ModelTransformer extends Transformer implements TransformerInterface
 
         // Now we apply to the translations to each o the model's eagerly-loaded relationships
         foreach ($model->getRelations() as $relationship => $item) {
+            if (is_null($item)) {
+                continue;
+            }
+
             $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations);
         }
 
