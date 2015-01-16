@@ -4,6 +4,7 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 use App;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Tectonic\Localisation\Contracts\TransformerInterface;
 
 class PaginationTransformer implements TransformerInterface
@@ -23,16 +24,35 @@ class PaginationTransformer implements TransformerInterface
     /**
      * Once a transformer for an object has been found, it then must do whatever work is necessary on that object.
      *
-     * @param object $object
+     * @param object $paginator
      * @return mixed
      */
-    public function transform($object)
+    public function transform($paginator)
     {
         $transformer = App::make(CollectionTransformer::class);
 
-        $originalRecords = new Collection($object->items());
+        $originalRecords = new Collection($paginator->items());
         $transformedRecords = $transformer->transform($originalRecords);
 
-        $object->setItems($transformedRecords);
+        return $this->createNew($paginator, $transformedRecords);
+    }
+
+    /**
+     * Creates a new pagination instance.
+     *
+     * @param $originalPaginator
+     * @param $newRecords
+     * @return LengthAwarePaginator
+     */
+    protected function createNew($originalPaginator, $newRecords)
+    {
+        $paginator = new LengthAwarePaginator(
+            $newRecords,
+            $originalPaginator->total(),
+            $originalPaginator->perPage(),
+            $originalPaginator->currentPage()
+        );
+        
+        return $paginator;
     }
 }
