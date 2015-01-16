@@ -85,10 +85,11 @@ class ModelTransformer extends Transformer implements TransformerInterface
         // Now we apply to the translations to each o the model's eagerly-loaded relationships
         foreach ($model->getRelations() as $relationship => $item) {
             if (is_null($item)) {
-                continue;
+                $entity->$relationship = null;
             }
-
-            $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations);
+            else {
+                $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations);
+            }
         }
 
         return $entity;

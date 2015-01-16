@@ -4,6 +4,7 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 use App;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Contracts\JsonableInterface;
 use Tectonic\Localisation\Contracts\TransformerInterface;
 
 class PaginationTransformer implements TransformerInterface
@@ -34,7 +35,5 @@ class PaginationTransformer implements TransformerInterface
         $transformedRecords = $transformer->transform($originalRecords);
 
         $object->setItems($transformedRecords);
-
-        return $object;
     }
 }
