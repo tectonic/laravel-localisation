@@ -40,7 +40,7 @@ class AcceptanceTestCase extends TestCase
         ));
     }
 
-    protected function getPackageProviders()
+    protected function getPackageProviders($app)
     {
         return [ServiceProvider::class];
     }
