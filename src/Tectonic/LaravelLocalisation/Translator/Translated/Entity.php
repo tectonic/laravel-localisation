@@ -1,10 +1,10 @@
 <?php
 namespace Tectonic\LaravelLocalisation\Translator\Translated;
 
-use Illuminate\Support\Contracts\ArrayableInterface;
-use Illuminate\Support\Contracts\JsonableInterface;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 
-class Entity implements ArrayableInterface, JsonableInterface
+class Entity implements Arrayable, Jsonable
 {
     /**
      * Stores all the translations, grouped by language.

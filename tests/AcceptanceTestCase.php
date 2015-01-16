@@ -12,24 +12,19 @@ class AcceptanceTestCase extends TestCase
     {
         parent::setUp();
 
-        $artisan = $this->app->make('artisan');
+        $migrations = $this->app->make('migration.repository');
+        $migrations->createRepository();
 
-        $artisan->call('migrate', [
-            '--database' => 'test',
-            '--path'     => 'src/migrations'
-        ]);
-
-        $artisan->call('migrate', [
-            '--database' => 'test',
-            '--path'     => 'tests/Fixtures/Migrations'
-        ]);
+        $migrator = $this->app->make('migrator');
+        $migrator->run(__DIR__.'/../src/migrations');
+        $migrator->run(__DIR__.'/Fixtures/Migrations');
 
         $this->init();
     }
 
     /**
      * Define environment setup.
-     *
+     * 
      * @param  Illuminate\Foundation\Application    $app
      * @return void
      */
