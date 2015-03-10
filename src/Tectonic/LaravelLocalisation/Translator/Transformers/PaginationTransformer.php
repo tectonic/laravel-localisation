@@ -52,7 +52,7 @@ class PaginationTransformer implements TransformerInterface
             $originalPaginator->perPage(),
             $originalPaginator->currentPage()
         );
-        
+
         return $paginator;
     }
 }

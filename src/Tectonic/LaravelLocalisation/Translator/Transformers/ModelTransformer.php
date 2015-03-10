@@ -72,10 +72,6 @@ class ModelTransformer extends Transformer implements TransformerInterface
     {
         $entity = new Entity($model->getAttributes());
 
-        if (!$this->isTranslatable($model)) {
-            return $entity;
-        }
-
         foreach ($translations as $translation) {
             if (!($translation->resource == class_basename($model) && $translation->foreign_id == $model->id)) continue;
 
