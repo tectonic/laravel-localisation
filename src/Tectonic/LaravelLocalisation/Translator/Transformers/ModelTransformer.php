@@ -3,6 +3,7 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SimpleCollection;
 use Tectonic\Localisation\Contracts\TransformerInterface;
 use Tectonic\LaravelLocalisation\Translator\Translated\Entity;
 use Tectonic\Localisation\Translator\Transformers\Transformer;
@@ -10,6 +11,16 @@ use Tectonic\Localisation\Translator\Translatable;
 
 class ModelTransformer extends Transformer implements TransformerInterface
 {
+    /**
+     * @var SimpleCollection
+     */
+    private static $cache;
+
+    public function __construct()
+    {
+        self::$cache = self::$cache ?: new SimpleCollection;
+    }
+
     /**
      * Implementations should take an object as a parameter, and then respond with a boolean
      * true or false depending on whether or not they are able to transform that object.
@@ -65,11 +76,16 @@ class ModelTransformer extends Transformer implements TransformerInterface
      * once one matches the given model's class, it will then apply those fields and values for its
      * record. It will then break the loop.
      *
-     * @param Model $model
-     * @param Collection $collection
+     * @param Model      $model
+     * @param Collection $translations
+     * @return Entity
      */
     public function applyTranslations(Model $model, Collection $translations)
     {
+        if ($this->isCached($model)) {
+            return $this->getCached($model);
+        }
+
         $entity = new Entity($model->getAttributes());
 
         foreach ($translations as $translation) {
@@ -87,6 +103,8 @@ class ModelTransformer extends Transformer implements TransformerInterface
                 $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations);
             }
         }
+
+        $this->putCached($model, $entity);
 
         return $entity;
     }
@@ -137,5 +155,50 @@ class ModelTransformer extends Transformer implements TransformerInterface
     {
         return in_array(Translatable::class, class_uses($model));
     }
+
+    /**
+     * Checks if the provided model's translations has been cached or not.
+     *
+     * @param Model $model
+     * @return bool
+     */
+    private function isCached(Model $model)
+    {
+        if (!method_exists($model, 'getTranslationCacheKey')) {
+            return false;
+        }
+
+        return self::$cache->has($model->getTranslationCacheKey());
+    }
+
+    /**
+     * Retrieves the cached entity from the cache repository, given the model cache key.
+     *
+     * @param Model  $model
+     * @param mixed  $default
+     * @return Entity
+     */
+    private function getCached(Model $model, $default = null)
+    {
+        if (!method_exists($model, 'getTranslationCacheKey')) {
+            return false;
+        }
+
+        return self::$cache->get($model->getTranslationCacheKey(), $default);
+    }
+
+    /**
+     * Caches the given Entity under the Model key, so it can be retrieved later.
+     *
+     * @param Model  $model
+     * @param Entity $entity
+     */
+    private function putCached(Model $model, Entity $entity)
+    {
+        if (!method_exists($model, 'getTranslationCacheKey')) {
+            return;
+        }
+
+        self::$cache->put($model->getTranslationCacheKey(), $entity);
+    }
 }
- 
