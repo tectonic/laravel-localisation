@@ -27,7 +27,31 @@ class CollectionTransformer extends Transformer implements TransformerInterface
      */
     public function transform($collection)
     {
-        $resources = $this->getTranslationResources($collection);
+        return $this->translate($collection, false);
+    }
+
+    /**
+     * Same as transform but should only translate objects one-level deep. With collections, we always
+     * have to pass off to the model transformer anyway, so just simply re-call the transform method.
+     *
+     * @param object $collection
+     * @return mixed
+     */
+    public function shallow($collection)
+    {
+        return $this->translate($collection, true);
+    }
+
+    /**
+     * Translates the collection.
+     *
+     * @param $collection
+     * @param boolean $shallow
+     * @return TranslatedCollection
+     */
+    private function translate($collection, $shallow)
+    {
+        $resources = $this->getTranslationResources($collection, $shallow);
         $translations = $this->getTranslations($resources);
 
         return $this->applyTranslations($collection, $translations);
@@ -36,15 +60,16 @@ class CollectionTransformer extends Transformer implements TransformerInterface
     /**
      * Gets the resources and their associated IDs that will be needed for translation later.
      *
-     * @param $collection
+     * @param Collection $collection
+     * @param bool $shallow
      * @return array
      */
-    public function getTranslationResources(Collection $collection)
+    public function getTranslationResources(Collection $collection, $shallow = false)
     {
         $resources = [];
 
         foreach ($collection as $model) {
-            $modelResources = with(new ModelTransformer)->getTranslationResources($model);
+            $modelResources = with(new ModelTransformer)->getTranslationResources($model, $shallow);
             $resources = $this->mergeResources($resources, $modelResources);
         }
 
@@ -56,6 +81,7 @@ class CollectionTransformer extends Transformer implements TransformerInterface
      *
      * @param Collection $collection
      * @param Collection $translations
+     * @return TranslatedCollection
      */
     public function applyTranslations(Collection $collection, Collection $translations)
     {

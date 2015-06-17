@@ -3,7 +3,6 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as SimpleCollection;
 use Tectonic\Localisation\Contracts\TransformerInterface;
 use Tectonic\LaravelLocalisation\Translator\Translated\Entity;
 use Tectonic\Localisation\Translator\Transformers\Transformer;
@@ -11,16 +10,6 @@ use Tectonic\Localisation\Translator\Translatable;
 
 class ModelTransformer extends Transformer implements TransformerInterface
 {
-    /**
-     * @var SimpleCollection
-     */
-    private static $cache;
-
-    public function __construct()
-    {
-        self::$cache = self::$cache ?: new SimpleCollection;
-    }
-
     /**
      * Implementations should take an object as a parameter, and then respond with a boolean
      * true or false depending on whether or not they are able to transform that object.
@@ -41,7 +30,30 @@ class ModelTransformer extends Transformer implements TransformerInterface
      */
     public function transform($model)
     {
-        $resources = $this->getTranslationResources($model);
+        return $this->translate($model, false);
+    }
+
+    /**
+     * Same as transform but should only translate objects one-level deep.
+     *
+     * @param object $model
+     * @return mixed
+     */
+    public function shallow($model)
+    {
+        return $this->translate($model, true);
+    }
+
+    /**
+     * Translates the model and returns the resulting transformed entity.
+     *
+     * @param Model $model
+     * @param boolean $shallow
+     * @return Entity
+     */
+    public function translate($model, $shallow)
+    {
+        $resources = $this->getTranslationResources($model, $shallow);
         $translations = $this->getTranslations($resources);
 
         return $this->applyTranslations($model, $translations);
@@ -50,12 +62,16 @@ class ModelTransformer extends Transformer implements TransformerInterface
     /**
      * Returns an array containing the model's resource, and then a child array that contains the model's id.
      *
-     * @param $model
+     * @param Model $model
+     * @param bool $shallow
      * @return array
+     * @throws \Exception
      */
-    public function getTranslationResources(Model $model)
+    public function getTranslationResources(Model $model, $shallow = false)
     {
         $resources = $this->baseResources($model);
+
+        if ($shallow) return $resources;
 
         // Now loop through each of the eagerly loaded relations, and get the resources from them as well
         foreach ($model->getRelations() as $item) {
@@ -76,25 +92,23 @@ class ModelTransformer extends Transformer implements TransformerInterface
      * once one matches the given model's class, it will then apply those fields and values for its
      * record. It will then break the loop.
      *
-     * @param Model      $model
+     * @param Model $model
      * @param Collection $translations
      * @return Entity
+     * @throws \Exception
      */
     public function applyTranslations(Model $model, Collection $translations)
     {
-        if ($this->isCached($model)) {
-            return $this->getCached($model);
-        }
-
         $entity = new Entity($model->getAttributes());
 
+        // Loop through each oft he available translations and apply it to the entity
         foreach ($translations as $translation) {
             if (!($translation->resource == class_basename($model) && $translation->foreign_id == $model->id)) continue;
 
             $entity->applyTranslation($translation->language, $translation->field, $translation->value);
         }
 
-        // Now we apply to the translations to each o the model's eagerly-loaded relationships
+        // Now we apply to the translations to each of the model's eagerly-loaded relationships
         foreach ($model->getRelations() as $relationship => $item) {
             if (is_null($item)) {
                 $entity->$relationship = null;
@@ -103,8 +117,6 @@ class ModelTransformer extends Transformer implements TransformerInterface
                 $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations);
             }
         }
-
-        $this->putCached($model, $entity);
 
         return $entity;
     }
@@ -131,6 +143,7 @@ class ModelTransformer extends Transformer implements TransformerInterface
      *
      * @param $item
      * @return CollectionTransformer|ModelTransformer
+     * @throws \Exception
      */
     private function resolveTransformer($item)
     {
@@ -154,51 +167,5 @@ class ModelTransformer extends Transformer implements TransformerInterface
     private function isTranslatable(Model $model)
     {
         return in_array(Translatable::class, class_uses($model));
-    }
-
-    /**
-     * Checks if the provided model's translations has been cached or not.
-     *
-     * @param Model $model
-     * @return bool
-     */
-    private function isCached(Model $model)
-    {
-        if (!method_exists($model, 'getTranslationCacheKey')) {
-            return false;
-        }
-
-        return self::$cache->has($model->getTranslationCacheKey());
-    }
-
-    /**
-     * Retrieves the cached entity from the cache repository, given the model cache key.
-     *
-     * @param Model  $model
-     * @param mixed  $default
-     * @return Entity
-     */
-    private function getCached(Model $model, $default = null)
-    {
-        if (!method_exists($model, 'getTranslationCacheKey')) {
-            return false;
-        }
-
-        return self::$cache->get($model->getTranslationCacheKey(), $default);
-    }
-
-    /**
-     * Caches the given Entity under the Model key, so it can be retrieved later.
-     *
-     * @param Model  $model
-     * @param Entity $entity
-     */
-    private function putCached(Model $model, Entity $entity)
-    {
-        if (!method_exists($model, 'getTranslationCacheKey')) {
-            return;
-        }
-
-        self::$cache->put($model->getTranslationCacheKey(), $entity);
     }
 }

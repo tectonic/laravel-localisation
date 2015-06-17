@@ -38,6 +38,17 @@ class PaginationTransformer implements TransformerInterface
     }
 
     /**
+     * Same as transform but should only translate objects one-level deep.
+     *
+     * @param object $paginator
+     * @return mixed
+     */
+    public function shallow($paginator)
+    {
+        return $this->transform($paginator);
+    }
+
+    /**
      * Creates a new pagination instance.
      *
      * @param $originalPaginator
