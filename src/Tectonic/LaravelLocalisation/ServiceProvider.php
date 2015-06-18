@@ -36,7 +36,7 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerModelTransformer()
     {
-        $this->app->bind(ModelTransformer::class, function($app) {
+        $this->app->bindShared(ModelTransformer::class, function($app) {
             $modelTransformer = new ModelTransformer;
             $modelTransformer->setTranslationRepository($app->make(TranslationRepositoryInterface::class));
 
@@ -50,7 +50,7 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerCollectionTransformer()
     {
-        $this->app->bind(CollectionTransformer::class, function($app) {
+        $this->app->bindShared(CollectionTransformer::class, function($app) {
             $collectionTransformer = new CollectionTransformer;
             $collectionTransformer->setTranslationRepository($app->make(TranslationRepositoryInterface::class));
 

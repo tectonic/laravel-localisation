@@ -148,11 +148,11 @@ class ModelTransformer extends Transformer implements TransformerInterface
     private function resolveTransformer($item)
     {
         if ($item instanceof Collection) {
-            return new CollectionTransformer;
+            return app(CollectionTransformer::class);
         }
 
         if ($item instanceof Model) {
-            return new ModelTransformer;
+            return app(ModelTransformer::class);
         }
 
         throw new \Exception("No transformer found for {get_class($item)}.");

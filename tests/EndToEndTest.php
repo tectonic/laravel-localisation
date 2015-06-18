@@ -54,7 +54,7 @@ class EndToEndTest extends AcceptanceTestCase
         $this->assertEquals('This is what we shall do', $translated->title['en_GB']);
         $this->assertEquals('Tucker', $translated->category->title['en_GB']);
     }
-
+    
     /**
      * Tests translations on relationships that have collections.
      */
