@@ -56,7 +56,7 @@ class ModelTransformer extends Transformer implements TransformerInterface
         $resources = $this->getTranslationResources($model, $shallow);
         $translations = $this->getTranslations($resources);
 
-        return $this->applyTranslations($model, $translations);
+        return $this->applyTranslations($model, $translations, $shallow);
     }
 
     /**
@@ -80,7 +80,7 @@ class ModelTransformer extends Transformer implements TransformerInterface
                 continue;
             }
 
-            $newResources = $this->resolveTransformer($item)->getTranslationResources($item);
+            $newResources = $this->resolveTransformer($item)->getTranslationResources($item, $shallow);
             $resources = $this->mergeResources($resources, $newResources);
         }
 
@@ -94,10 +94,11 @@ class ModelTransformer extends Transformer implements TransformerInterface
      *
      * @param Model $model
      * @param Collection $translations
+     * @param bool $shallow
      * @return Entity
      * @throws \Exception
      */
-    public function applyTranslations(Model $model, Collection $translations)
+    public function applyTranslations(Model $model, Collection $translations, $shallow)
     {
         $entity = new Entity($model->getAttributes());
 
@@ -108,13 +109,15 @@ class ModelTransformer extends Transformer implements TransformerInterface
             $entity->applyTranslation($translation->language, $translation->field, $translation->value);
         }
 
+        if ($shallow) return $entity;
+
         // Now we apply to the translations to each of the model's eagerly-loaded relationships
         foreach ($model->getRelations() as $relationship => $item) {
             if (is_null($item)) {
                 $entity->$relationship = null;
             }
             else {
-                $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations);
+                $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations, $shallow);
             }
         }
 

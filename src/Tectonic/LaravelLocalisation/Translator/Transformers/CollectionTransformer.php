@@ -54,7 +54,7 @@ class CollectionTransformer extends Transformer implements TransformerInterface
         $resources = $this->getTranslationResources($collection, $shallow);
         $translations = $this->getTranslations($resources);
 
-        return $this->applyTranslations($collection, $translations);
+        return $this->applyTranslations($collection, $translations, $shallow);
     }
 
     /**
@@ -64,12 +64,12 @@ class CollectionTransformer extends Transformer implements TransformerInterface
      * @param bool $shallow
      * @return array
      */
-    public function getTranslationResources(Collection $collection, $shallow = false)
+    public function getTranslationResources(Collection $collection, $shallow)
     {
         $resources = [];
 
         foreach ($collection as $model) {
-            $modelResources = with(new ModelTransformer)->getTranslationResources($model, $shallow);
+            $modelResources = app(ModelTransformer::class)->getTranslationResources($model, $shallow);
             $resources = $this->mergeResources($resources, $modelResources);
         }
 
@@ -81,14 +81,15 @@ class CollectionTransformer extends Transformer implements TransformerInterface
      *
      * @param Collection $collection
      * @param Collection $translations
+     * @param bool $shallow
      * @return TranslatedCollection
      */
-    public function applyTranslations(Collection $collection, Collection $translations)
+    public function applyTranslations(Collection $collection, Collection $translations, $shallow)
     {
         $translatedCollection = new TranslatedCollection;
 
         foreach ($collection as $model) {
-            $translatedCollection->add(with(new ModelTransformer)->applyTranslations($model, $translations));
+            $translatedCollection->add(app(ModelTransformer::class)->applyTranslations($model, $translations, $shallow));
         }
 
         return $translatedCollection;
