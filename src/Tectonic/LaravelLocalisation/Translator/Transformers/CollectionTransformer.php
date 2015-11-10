@@ -86,12 +86,10 @@ class CollectionTransformer extends Transformer implements TransformerInterface
      */
     public function applyTranslations(Collection $collection, Collection $translations, $shallow)
     {
-        $translatedCollection = new TranslatedCollection;
-
         foreach ($collection as $model) {
-            $translatedCollection->add(app(ModelTransformer::class)->applyTranslations($model, $translations, $shallow));
+            app(ModelTransformer::class)->applyTranslations($model, $translations, $shallow);
         }
 
-        return $translatedCollection;
+        return $collection;
     }
 }

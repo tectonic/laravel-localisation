@@ -100,13 +100,11 @@ class ModelTransformer extends Transformer implements TransformerInterface
      */
     public function applyTranslations(Model $model, Collection $translations, $shallow)
     {
-        $entity = new Entity($model->getAttributes());
-
-        // Loop through each oft he available translations and apply it to the entity
+        // Loop through each of the available translations and apply it to the model
         foreach ($translations as $translation) {
             if (!($translation->resource == class_basename($model) && $translation->foreign_id == $model->id)) continue;
 
-            $entity->applyTranslation($translation->language, $translation->field, $translation->value);
+            $model->applyTranslation($translation->language, $translation->field, $translation->value);
         }
 
         if ($shallow) return $entity;
