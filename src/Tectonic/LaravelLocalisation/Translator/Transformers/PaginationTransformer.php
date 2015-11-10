@@ -5,9 +5,9 @@ use App;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Tectonic\Localisation\Contracts\TransformerInterface;
+use Tectonic\Localisation\Contracts\Transformer;
 
-class PaginationTransformer implements TransformerInterface
+class PaginationTransformer implements Transformer
 {
     /**
      * Implementations should take an object as a parameter, and then respond with a boolean

@@ -2,12 +2,12 @@
 namespace Tectonic\LaravelLocalisation;
 
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
-use Tectonic\LaravelLocalisation\Database\TranslationRepository;
+use Tectonic\LaravelLocalisation\Database\EloquentTranslationRepository;
 use Tectonic\LaravelLocalisation\Translator\Transformers\CollectionTransformer;
 use Tectonic\LaravelLocalisation\Translator\Transformers\ModelTransformer;
 use Tectonic\LaravelLocalisation\Translator\Transformers\PaginationTransformer;
 use Tectonic\Localisation\Translator\Engine;
-use Tectonic\Localisation\Contracts\TranslationRepositoryInterface;
+use Tectonic\Localisation\Contracts\TranslationRepository;
 
 class ServiceProvider extends LaravelServiceProvider
 {
@@ -27,7 +27,7 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerTranslationRepository()
     {
-        $this->app->singleton(TranslationRepositoryInterface::class, TranslationRepository::class);
+        $this->app->singleton(TranslationRepository::class, EloquentTranslationRepository::class);
     }
 
     /**
@@ -38,7 +38,7 @@ class ServiceProvider extends LaravelServiceProvider
     {
         $this->app->bindShared(ModelTransformer::class, function($app) {
             $modelTransformer = new ModelTransformer;
-            $modelTransformer->setTranslationRepository($app->make(TranslationRepositoryInterface::class));
+            $modelTransformer->setTranslationRepository($app->make(TranslationRepository::class));
 
             return $modelTransformer;
         });
@@ -52,7 +52,7 @@ class ServiceProvider extends LaravelServiceProvider
     {
         $this->app->bindShared(CollectionTransformer::class, function($app) {
             $collectionTransformer = new CollectionTransformer;
-            $collectionTransformer->setTranslationRepository($app->make(TranslationRepositoryInterface::class));
+            $collectionTransformer->setTranslationRepository($app->make(TranslationRepository::class));
 
             return $collectionTransformer;
         });

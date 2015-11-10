@@ -2,7 +2,7 @@
 namespace Tests\Database;
 
 use App;
-use Tectonic\LaravelLocalisation\Database\TranslationRepository;
+use Tectonic\LaravelLocalisation\Database\EloquentTranslationRepository;
 use Tectonic\Localisation\Translator\ResourceCriteria;
 use Tests\AcceptanceTestCase;
 
@@ -12,7 +12,7 @@ class TranslationRepositoryTest extends AcceptanceTestCase
 
     protected function init()
     {
-        $this->translationRepository = App::make(TranslationRepository::class);
+        $this->translationRepository = App::make(EloquentTranslationRepository::class);
 
         $this->translationRepository->create('en_GB', 'Content', 1, 'title', 'This is how you spell colour.');
         $this->translationRepository->create('en_US', 'Content', 1, 'title', 'This is how you spell color.');

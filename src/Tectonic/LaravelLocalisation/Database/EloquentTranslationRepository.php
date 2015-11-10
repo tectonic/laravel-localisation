@@ -1,10 +1,10 @@
 <?php
 namespace Tectonic\LaravelLocalisation\Database;
 
-use Tectonic\Localisation\Contracts\TranslationRepositoryInterface;
+use Tectonic\Localisation\Contracts\TranslationRepository;
 use Tectonic\Localisation\Translator\ResourceCriteria;
 
-class TranslationRepository implements TranslationRepositoryInterface
+class EloquentTranslationRepository implements TranslationRepository
 {
     /**
      * @var Translation

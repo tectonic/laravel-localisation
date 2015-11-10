@@ -3,12 +3,12 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Tectonic\Localisation\Contracts\TransformerInterface;
+use Tectonic\Localisation\Contracts\Transformer;
 use Tectonic\LaravelLocalisation\Translator\Translated\Entity;
-use Tectonic\Localisation\Translator\Transformers\Transformer;
+use Tectonic\Localisation\Translator\Transformers\Transformer as BaseTransformer;
 use Tectonic\Localisation\Translator\Translatable;
 
-class ModelTransformer extends Transformer implements TransformerInterface
+class ModelTransformer extends BaseTransformer implements Transformer
 {
     /**
      * Implementations should take an object as a parameter, and then respond with a boolean
@@ -104,22 +104,19 @@ class ModelTransformer extends Transformer implements TransformerInterface
         foreach ($translations as $translation) {
             if (!($translation->resource == class_basename($model) && $translation->foreign_id == $model->id)) continue;
 
-            $model->applyTranslation($translation->language, $translation->field, $translation->value);
+            $model->addTranslation($translation->language, $translation->field, $translation->value);
         }
 
-        if ($shallow) return $entity;
+        if ($shallow) return $model;
 
         // Now we apply to the translations to each of the model's eagerly-loaded relationships
         foreach ($model->getRelations() as $relationship => $item) {
-            if (is_null($item)) {
-                $entity->$relationship = null;
-            }
-            else {
-                $entity->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations, $shallow);
+            if (!is_null($item)) {
+                $model->$relationship = $this->resolveTransformer($item)->applyTranslations($item, $translations, $shallow);
             }
         }
 
-        return $entity;
+        return $model;
     }
 
     /**

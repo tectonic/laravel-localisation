@@ -1,11 +1,12 @@
 <?php
 namespace Tests\Fixtures\Models;
 
-use Tectonic\Localisation\Translator\Translatable;
+use Tectonic\Localisation\Contracts\Translatable;
+use Tectonic\Localisation\Translator\Translations;
 
-class Category extends \Eloquent
+class Category extends \Eloquent implements Translatable
 {
-    use Translatable;
+    use Translations;
 
 	public function content()
     {

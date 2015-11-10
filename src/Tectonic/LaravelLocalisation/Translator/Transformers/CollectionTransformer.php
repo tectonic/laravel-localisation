@@ -3,10 +3,10 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
 use Tectonic\LaravelLocalisation\Translator\Translated\Collection as TranslatedCollection;
 use Illuminate\Database\Eloquent\Collection;
-use Tectonic\Localisation\Contracts\TransformerInterface;
-use Tectonic\Localisation\Translator\Transformers\Transformer;
+use Tectonic\Localisation\Contracts\Transformer;
+use Tectonic\Localisation\Translator\Transformers\Transformer as BaseTransformer;
 
-class CollectionTransformer extends Transformer implements TransformerInterface
+class CollectionTransformer extends BaseTransformer implements Transformer
 {
     /**
      * This transformer is only appropriate for eloquent collection objects.

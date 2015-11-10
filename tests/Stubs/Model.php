@@ -1,12 +1,12 @@
 <?php
 namespace tests\Stubs;
 
-use Tectonic\Localisation\Contracts\TranslatableInterface;
-use Tectonic\Localisation\Translator\Translatable;
+use Tectonic\Localisation\Contracts\Translatable;
+use Tectonic\Localisation\Translator\Translations;
 
-class Model implements TranslatableInterface
+class Model implements Translatable
 {
-	use Translatable;
+	use Translations;
 
     public $id = 1;
 

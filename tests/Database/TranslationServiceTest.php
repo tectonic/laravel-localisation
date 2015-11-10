@@ -3,7 +3,7 @@ namespace tests\Database;
 
 use Mockery as m;
 use Tectonic\LaravelLocalisation\Database\TranslationService;
-use Tectonic\Localisation\Contracts\TranslationRepositoryInterface;
+use Tectonic\Localisation\Contracts\TranslationRepository;
 use Tests\Stubs\Model;
 use Tests\TestCase;
 
@@ -11,7 +11,7 @@ class TranslationServiceTest extends TestCase
 {
     public function testFind()
     {
-        $repository = m::spy(TranslationRepositoryInterface::class);
+        $repository = m::spy(TranslationRepository::class);
         $service = new TranslationService($repository);
 
         $service->find(1);
@@ -21,7 +21,7 @@ class TranslationServiceTest extends TestCase
 
     public function testFindAll()
     {
-        $repository = m::spy(TranslationRepositoryInterface::class);
+        $repository = m::spy(TranslationRepository::class);
         $service = new TranslationService($repository);
 
         $service->findAll([]);
@@ -31,7 +31,7 @@ class TranslationServiceTest extends TestCase
 
     public function testTranslationCreation()
     {
-        $repository = m::mock(TranslationRepositoryInterface::class);
+        $repository = m::mock(TranslationRepository::class);
         $service = new TranslationService($repository);
         $translation = new \stdClass;
         $model = new Model;
@@ -47,7 +47,7 @@ class TranslationServiceTest extends TestCase
      */
     public function testTranslationUpdateWithNullTranslation()
     {
-        $repository = m::mock(TranslationRepositoryInterface::class);
+        $repository = m::mock(TranslationRepository::class);
         $repository->shouldReceive('getByCriteria')->once()->andReturn(null);
         $service = new TranslationService($repository);
         $model = new Model;
