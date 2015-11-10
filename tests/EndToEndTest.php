@@ -37,8 +37,8 @@ class EndToEndTest extends AcceptanceTestCase
         $category = Category::find($this->category1->id);
         $translated = Translator::translate($category);
 
-        $this->assertEquals('Tucker', $translated->title['en_GB']);
-        $this->assertEquals('Food', $translated->title['en_US']);
+        $this->assertEquals('Tucker', $translated->trans('en_GB', 'title'));
+        $this->assertEquals('Food', $translated->trans('en_US', 'title'));
         $this->assertArrayHasKey('en_US', $translated->getTranslations());
         $this->assertArrayHasKey('en_GB', $translated->getTranslations());
     }
@@ -51,8 +51,8 @@ class EndToEndTest extends AcceptanceTestCase
         $content = Content::with('category')->find($this->content1->id);
         $translated = Translator::translate($content);
 
-        $this->assertEquals('This is what we shall do', $translated->title['en_GB']);
-        $this->assertEquals('Tucker', $translated->category->title['en_GB']);
+        $this->assertEquals('This is what we shall do', $translated->trans('en_GB', 'title'));
+        $this->assertEquals('Tucker', $translated->category->trans('en_GB', 'title'));
     }
 
     /**
@@ -64,7 +64,7 @@ class EndToEndTest extends AcceptanceTestCase
         $translated = Translator::translate($category);
 
         $this->assertCount(2, $translated->content);
-        $this->assertEquals('This is what we shall do', $translated->content[0]->title['en_GB']);
+        $this->assertEquals('This is what we shall do', $translated->content[0]->trans('en_GB', 'title'));
     }
 
     /**
@@ -76,8 +76,8 @@ class EndToEndTest extends AcceptanceTestCase
         $translated = Translator::translate($categories);
 
         $this->assertCount(2, $categories);
-        $this->assertEquals('Football', $translated->last()->title['en_GB']);
-        $this->assertEquals('This is what we shall do', $translated[0]->content[0]->title['en_GB']);
+        $this->assertEquals('Football', $translated->last()->trans('en_GB', 'title'));
+        $this->assertEquals('This is what we shall do', $translated[0]->content[0]->trans('en_GB', 'title'));
     }
 
     /**
