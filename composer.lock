@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7211746bac95e1d6a51533c6a0fd9e3f",
-    "content-hash": "2d533c5fa2f7d23963575a73a84b0921",
+    "hash": "83c953a217d2516fabe6a044faf36f7d",
+    "content-hash": "e4048840da254ee9a55e17f6033f8f12",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1679,7 +1679,7 @@
         },
         {
             "name": "tectonic/localisation",
-            "version": "dev-release/2.0",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tectonic/localisation.git",
@@ -1981,16 +1981,16 @@
         },
         {
             "name": "orchestra/database",
-            "version": "v3.1.11",
+            "version": "v3.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/database.git",
-                "reference": "d304fae8e1f0d050cc58fcf9dc0f119a59a85a93"
+                "reference": "512efb31563e0e54e5c26e74c9314ea97da49cf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/database/zipball/d304fae8e1f0d050cc58fcf9dc0f119a59a85a93",
-                "reference": "d304fae8e1f0d050cc58fcf9dc0f119a59a85a93",
+                "url": "https://api.github.com/repos/orchestral/database/zipball/512efb31563e0e54e5c26e74c9314ea97da49cf0",
+                "reference": "512efb31563e0e54e5c26e74c9314ea97da49cf0",
                 "shasum": ""
             },
             "require": {
@@ -2031,7 +2031,7 @@
                 "orchestra-platform",
                 "orchestral"
             ],
-            "time": "2015-07-13 13:02:17"
+            "time": "2015-11-08 23:17:49"
         },
         {
             "name": "orchestra/testbench",
@@ -2834,7 +2834,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "tectonic/localisation": 20,
         "mockery/mockery": 20
     },
     "prefer-stable": false,
