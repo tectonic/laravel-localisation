@@ -14,8 +14,8 @@ trait TranslationRetriever
      */
     public function trans($lang, $key)
     {
-        if (isset($this->translations[$lang][$key])) {
-            return $this->translations[$lang][$key];
+        if (isset($this->translated[$lang][$key])) {
+            return $this->translated[$lang][$key];
         }
     }
 
@@ -30,7 +30,7 @@ trait TranslationRetriever
     {
         $lang = App::getLocale();
 
-        if (isset($this->translations[$lang][$key])) {
+        if (isset($this->translated[$lang][$key])) {
             return $this->trans($lang, $key);
         }
 
@@ -44,6 +44,6 @@ trait TranslationRetriever
      */
     public function getTranslations()
     {
-        return $this->translations;
+        return $this->translated;
     }
 }

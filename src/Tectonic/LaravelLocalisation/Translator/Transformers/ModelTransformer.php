@@ -4,9 +4,8 @@ namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Tectonic\Localisation\Contracts\Transformer;
-use Tectonic\LaravelLocalisation\Translator\Translated\Entity;
 use Tectonic\Localisation\Translator\Transformers\Transformer as BaseTransformer;
-use Tectonic\Localisation\Translator\Translatable;
+use Tectonic\Localisation\Contracts\Translatable;
 
 class ModelTransformer extends BaseTransformer implements Transformer
 {
@@ -164,6 +163,6 @@ class ModelTransformer extends BaseTransformer implements Transformer
      */
     private function isTranslatable(Model $model)
     {
-        return in_array(Translatable::class, class_uses($model));
+        return $model instanceof Translatable;
     }
 }
