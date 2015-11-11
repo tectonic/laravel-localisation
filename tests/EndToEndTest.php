@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use Illuminate\Support\Facades\App;
 use Tectonic\LaravelLocalisation\Database\Translation;
 use Tectonic\LaravelLocalisation\Facades\Translator;
 use Tests\Fixtures\Models\Category;
