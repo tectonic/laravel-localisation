@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "83c953a217d2516fabe6a044faf36f7d",
-    "content-hash": "e4048840da254ee9a55e17f6033f8f12",
+    "hash": "9aa70b6da4223064752426be7fa715d4",
+    "content-hash": "534e418b41d1529a2ad5b6c2b19881b4",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1679,16 +1679,16 @@
         },
         {
             "name": "tectonic/localisation",
-            "version": "2.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tectonic/localisation.git",
-                "reference": "ac7b8e15cfbdd70cabaec167b76730c05d82309c"
+                "reference": "5df3adf8143207c3ecb79a9584ad8899c5429d4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tectonic/localisation/zipball/ac7b8e15cfbdd70cabaec167b76730c05d82309c",
-                "reference": "ac7b8e15cfbdd70cabaec167b76730c05d82309c",
+                "url": "https://api.github.com/repos/tectonic/localisation/zipball/5df3adf8143207c3ecb79a9584ad8899c5429d4b",
+                "reference": "5df3adf8143207c3ecb79a9584ad8899c5429d4b",
                 "shasum": ""
             },
             "require": {
@@ -1713,7 +1713,7 @@
                 }
             ],
             "description": "A localisation/translation package for models, entities and collections in your chosen framework.",
-            "time": "2015-11-10 18:49:44"
+            "time": "2015-11-11 19:40:52"
         },
         {
             "name": "vlucas/phpdotenv",
