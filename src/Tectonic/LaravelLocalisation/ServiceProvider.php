@@ -74,5 +74,8 @@ class ServiceProvider extends LaravelServiceProvider
 
             return $translatorEngine;
         });
+
+        // Register the Engine alias so it that it can simply be injected
+        $this->app->alias('localisation.translator', Engine::class);
     }
 }
