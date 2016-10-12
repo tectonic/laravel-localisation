@@ -2,6 +2,7 @@
 namespace Tests;
 
 use Orchestra\Testbench\TestCase;
+use Tectonic\LaravelLocalisation\Database\Translation;
 use Tectonic\LaravelLocalisation\ServiceProvider;
 
 class AcceptanceTestCase extends TestCase
@@ -38,6 +39,8 @@ class AcceptanceTestCase extends TestCase
             'database' => ':memory:',
             'prefix'   => '',
         ));
+
+        $app['config']->set('localisation.model', new Translation);
     }
 
     protected function getPackageProviders($app)

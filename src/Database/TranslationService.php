@@ -9,14 +9,14 @@ class TranslationService
     /**
      * @var TranslationRepository
      */
-    private $translationRepository;
+    private $translations;
 
     /**
-     * @param TranslationRepository $translationRepository
+     * @param TranslationRepository $translations
      */
-    public function __construct(TranslationRepository $translationRepository)
+    public function __construct(TranslationRepository $translations)
     {
-        $this->translationRepository = $translationRepository;
+        $this->translations = $translations;
     }
 
     /**
@@ -27,7 +27,7 @@ class TranslationService
      */
     public function find($id)
     {
-        return $this->translationRepository->getById($id);
+        return $this->translations->getById($id);
     }
 
     /**
@@ -38,7 +38,7 @@ class TranslationService
      */
     public function findAll(array $params)
     {
-        return $this->translationRepository->getByCriteria($params);
+        return $this->translations->getByCriteria($params);
     }
 
     /**
@@ -52,7 +52,7 @@ class TranslationService
      */
     public function create(Translatable $model, $language, $field, $value)
     {
-        $translation = $this->translationRepository->getNew();
+        $translation = $this->translations->getNew();
 
         $translation->language = $language;
         $translation->field = $field;
@@ -60,7 +60,7 @@ class TranslationService
         $translation->resource = $model->getResourceName();
         $translation->foreignId = $model->getId();
 
-        $this->translationRepository->save($translation);
+        $this->translations->save($translation);
 
         return $translation;
     }
@@ -85,7 +85,7 @@ class TranslationService
 
         $translation->value = $value;
 
-        $this->translationRepository->save($translation);
+        $this->translations->save($translation);
 
         return $translation;
     }
@@ -147,7 +147,7 @@ class TranslationService
      */
     public function findForUpdate(Translatable $model, $language, $field)
     {
-        $translations = $this->translationRepository->getByCriteria([
+        $translations = $this->translations->getByCriteria([
             'language' => $language,
             'resource' => $model->getResourceName(),
             'foreign_id' => $model->getId(),
@@ -168,7 +168,7 @@ class TranslationService
      */
     public function delete($translation)
     {
-        $this->translationRepository->delete($translation);
+        $this->translations->delete($translation);
     }
 
     /**
@@ -179,7 +179,7 @@ class TranslationService
     public function deleteAll(array $translations)
     {
         foreach ($translations as $translation) {
-            $this->translationRepository->delete($translation);
+            $this->translations->delete($translation);
         }
     }
 }

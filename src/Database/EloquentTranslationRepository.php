@@ -1,20 +1,21 @@
 <?php
 namespace Tectonic\LaravelLocalisation\Database;
 
+use Illuminate\Database\Eloquent\Model;
 use Tectonic\Localisation\Contracts\TranslationRepository;
 use Tectonic\Localisation\Translator\ResourceCriteria;
 
 class EloquentTranslationRepository implements TranslationRepository
 {
     /**
-     * @var Translation
+     * @var Model
      */
     private $model;
 
     /**
-     * @param Translation $model
+     * @param Model $model
      */
-    public function __construct(Translation $model)
+    public function __construct(Model $model)
     {
         $this->model = $model;
     }
@@ -96,8 +97,7 @@ class EloquentTranslationRepository implements TranslationRepository
      */
     public function getNew()
     {
-
-
+        return $this->model->getNew();
     }
 
     /**
