@@ -16,7 +16,7 @@ class AcceptanceTestCase extends TestCase
         $migrations->createRepository();
 
         $migrator = $this->app->make('migrator');
-        $migrator->run(__DIR__.'/../src/migrations');
+        $migrator->run(__DIR__ . '/../migrations');
         $migrator->run(__DIR__.'/Fixtures/Migrations');
 
         $this->init();
