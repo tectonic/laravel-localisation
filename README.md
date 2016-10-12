@@ -14,6 +14,12 @@ Install via composer:
 
 You can view the rest of the documentation here: (https://github.com/tectonic/laravel-localisation/wiki)
 
+## Changelog
+
+### 1.3.0
+
+* Updated dependencies so that the package is not so dependent on a specific model, but rather simply an Eloquent model.
+
 # License
 
 The MIT License (MIT)
