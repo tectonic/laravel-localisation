@@ -22,6 +22,13 @@ class ServiceProvider extends LaravelServiceProvider
         $this->registerTranslator();
     }
 
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__.'/../config/localisation.' => config_path('localisation.php')
+        ]);
+    }
+    
     /**
      * Set up the translation repository interface, binding it to the LaravelLocalisation implementation.
      */
