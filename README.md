@@ -16,6 +16,10 @@ You can view the rest of the documentation here: (https://github.com/tectonic/la
 
 ## Changelog
 
+### 1.3.2
+
+* Small fix for publishing configuration
+
 ### 1.3.0
 
 * Updated dependencies so that the package is not so dependent on a specific model, but rather simply an Eloquent model.

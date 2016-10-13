@@ -35,7 +35,9 @@ class ServiceProvider extends LaravelServiceProvider
     private function registerTranslationRepository()
     {
         $this->app->singleton(TranslationRepository::class, function($app) {
-            return new EloquentTranslationRepository($app['config']->get('localisation.model'));
+            $model = $app['config']->get('localisation.model');
+
+            return new EloquentTranslationRepository(new $model);
         });
     }
 
