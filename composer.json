@@ -11,7 +11,7 @@
 		"php": ">=7.0.0",
 		"illuminate/support": "5.*",
 		"illuminate/database": "5.*",
-		"tectonic/localisation": "^2.0.2"
+		"tectonic/localisation": "^2.0.3"
 	},
 	"require-dev": {
 		"mockery/mockery": "dev-master@dev",
