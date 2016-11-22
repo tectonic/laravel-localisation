@@ -31,10 +31,10 @@ class EloquentTranslationRepository implements TranslationRepository
      */
     public function getByResourceCriteria(ResourceCriteria $criteria)
     {
-        $resources = $criteria->getResources();
-
         // Resources provided may be empty, in which case - no translations should be searched for
-        if (empty($resources)) return new Collection;
+        if ($criteria->invalid()) return new Collection;
+        
+        $resources = $criteria->getResources();
 
         $query = $this->model->select(['*']);
 
