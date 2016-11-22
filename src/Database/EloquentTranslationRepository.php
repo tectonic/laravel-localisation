@@ -1,6 +1,7 @@
 <?php
 namespace Tectonic\LaravelLocalisation\Database;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Tectonic\Localisation\Contracts\TranslationRepository;
 use Tectonic\Localisation\Translator\ResourceCriteria;
@@ -31,6 +32,10 @@ class EloquentTranslationRepository implements TranslationRepository
     public function getByResourceCriteria(ResourceCriteria $criteria)
     {
         $resources = $criteria->getResources();
+
+        // Resources provided may be empty, in which case - no translations should be searched for
+        if (empty($resources)) return new Collection;
+
         $query = $this->model->select(['*']);
 
         foreach ($resources as $resource) {
