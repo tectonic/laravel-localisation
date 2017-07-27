@@ -99,9 +99,12 @@ class ModelTransformer extends BaseTransformer implements Transformer
      */
     public function applyTranslations(Model $model, Collection $translations, $shallow)
     {
+        $modelClassname = class_basename($model);
+        $modelId = $model->id;
+
         // Loop through each of the available translations and apply it to the model
         foreach ($translations as $translation) {
-            if (!($translation->resource == class_basename($model) && $translation->foreign_id == $model->id)) continue;
+            if (!($translation->resource == $modelClassname && $translation->foreign_id == $modelId)) continue;
 
             $model->addTranslation($translation->language, $translation->field, $translation->value);
         }
