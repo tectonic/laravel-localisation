@@ -62,6 +62,8 @@ class TranslationService
 
         $this->translations->save($translation);
 
+        $model->touch();
+
         return $translation;
     }
 
@@ -86,6 +88,8 @@ class TranslationService
         $translation->value = $value;
 
         $this->translations->save($translation);
+
+        $model->touch();
 
         return $translation;
     }
