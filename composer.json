@@ -7,16 +7,22 @@
 			"email": "kirk@tectonic.com.au"
 		}
 	],
+	"repositories": [
+		{
+			"type": "path",
+			"url": "../localisation"
+		}
+	],
 	"require": {
-		"php": ">=7.0.0",
-		"illuminate/support": "5.*",
-		"illuminate/database": "5.*",
-		"tectonic/localisation": "^2.0.3"
+		"php": ">=7.2",
+		"illuminate/support": "^6.1",
+		"illuminate/database": "^6.1",
+		"tectonic/localisation": "dev-feature/laravel-lts-6"
 	},
 	"require-dev": {
-		"mockery/mockery": "dev-master@dev",
+		"mockery/mockery": "^1.4",
 		"orchestra/testbench": "3.*",
-		"phpunit/phpunit": "~5.7"
+		"phpunit/phpunit": "^8.0"
 	},
 	"autoload": {
 		"psr-4": {
