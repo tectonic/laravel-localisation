@@ -17,7 +17,7 @@
 		"php": ">=7.2",
 		"illuminate/support": "^6.1",
 		"illuminate/database": "^6.1",
-		"tectonic/localisation": "dev-feature/laravel-lts-6"
+		"tectonic/localisation": "^2.0.3"
 	},
 	"require-dev": {
 		"mockery/mockery": "^1.4",

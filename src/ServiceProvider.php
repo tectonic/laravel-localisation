@@ -3,10 +3,10 @@ namespace Tectonic\LaravelLocalisation;
 
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use Tectonic\LaravelLocalisation\Database\EloquentTranslationRepository;
+use Tectonic\LaravelLocalisation\Translator\Engine;
 use Tectonic\LaravelLocalisation\Translator\Transformers\CollectionTransformer;
 use Tectonic\LaravelLocalisation\Translator\Transformers\ModelTransformer;
 use Tectonic\LaravelLocalisation\Translator\Transformers\PaginationTransformer;
-use Tectonic\Localisation\Translator\Engine;
 use Tectonic\Localisation\Contracts\TranslationRepository;
 
 class ServiceProvider extends LaravelServiceProvider
