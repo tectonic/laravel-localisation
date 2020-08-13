@@ -34,5 +34,6 @@
 			"Tests\\": "tests/"
 		}
 	},
-	"minimum-stability": "stable"
+	"minimum-stability": "dev",
+	"prefer-stable": true
 }
