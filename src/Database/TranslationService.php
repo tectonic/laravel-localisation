@@ -158,7 +158,7 @@ class TranslationService
             'field' => $field
         ]);
 
-        if (!empty($translations)) {
+        if (isset($translations[0])) {
             return $translations[0];
         }
 
