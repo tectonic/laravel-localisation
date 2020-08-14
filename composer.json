@@ -7,11 +7,17 @@
 			"email": "kirk@tectonic.com.au"
 		}
 	],
+	"repositories": [
+		{
+			"type": "git",
+			"url": "git@github.com:kontoulis/localisation.git"
+		}
+	],
 	"require": {
 		"php": "^7.2",
 		"illuminate/support": "^6.1",
 		"illuminate/database": "^6.1",
-		"tectonic/localisation": "^2.0.3"
+		"tectonic/localisation": "dev-feature/php7.2-upgrade"
 	},
 	"require-dev": {
 		"mockery/mockery": "^1.4",
