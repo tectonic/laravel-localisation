@@ -11,6 +11,7 @@ class TranslationServiceTest extends TestCase
 {
     public function testFind()
     {
+        self::expectNotToPerformAssertions();
         $repository = m::spy(TranslationRepository::class);
         $service = new TranslationService($repository);
 
@@ -21,6 +22,7 @@ class TranslationServiceTest extends TestCase
 
     public function testFindAll()
     {
+        self::expectNotToPerformAssertions();
         $repository = m::spy(TranslationRepository::class);
         $service = new TranslationService($repository);
 

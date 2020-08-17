@@ -24,10 +24,11 @@ class ModelTransformer extends BaseTransformer implements Transformer
     /**
      * Once a transformer for an object has been found, it then must do whatever work is necessary on that object.
      *
-     * @param Model $model
+     * @param  Model  $model
+     * @param  null  $language
      * @return mixed
      */
-    public function transform($model)
+    public function transform($model, $language = null)
     {
         return $this->translate($model, false);
     }
@@ -35,10 +36,12 @@ class ModelTransformer extends BaseTransformer implements Transformer
     /**
      * Same as transform but should only translate objects one-level deep.
      *
-     * @param object $model
+     * @param  Model  $model
+     * @param  null  $language
+     * @param  null  $fields
      * @return mixed
      */
-    public function shallow($model)
+    public function shallow($model, $language = null, $fields = null)
     {
         return $this->translate($model, true);
     }

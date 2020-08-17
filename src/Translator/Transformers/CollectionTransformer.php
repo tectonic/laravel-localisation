@@ -22,10 +22,11 @@ class CollectionTransformer extends BaseTransformer implements Transformer
     /**
      * Once a transformer for an object has been found, it then must do whatever work is necessary on that object.
      *
-     * @param Collection $collection
+     * @param  Collection  $collection
+     * @param  null  $language
      * @return mixed
      */
-    public function transform($collection)
+    public function transform($collection, $language = null)
     {
         return $this->translate($collection, false);
     }
@@ -34,10 +35,12 @@ class CollectionTransformer extends BaseTransformer implements Transformer
      * Same as transform but should only translate objects one-level deep. With collections, we always
      * have to pass off to the model transformer anyway, so just simply re-call the transform method.
      *
-     * @param object $collection
+     * @param  object  $collection
+     * @param  null  $language
+     * @param  null  $fields
      * @return mixed
      */
-    public function shallow($collection)
+    public function shallow($collection, $language = null, $fields = null)
     {
         return $this->translate($collection, true);
     }
