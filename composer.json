@@ -15,14 +15,14 @@
 	],
 	"require": {
 		"php": "^7.2",
-		"illuminate/support": "^6.1",
-		"illuminate/database": "^6.1",
+		"illuminate/support": "^7.0",
+		"illuminate/database": "^7.0",
 		"tectonic/localisation": "dev-feature/php7.2-upgrade"
 	},
 	"require-dev": {
 		"mockery/mockery": "^1.4",
-		"orchestra/testbench": "4.*",
-		"phpunit/phpunit": "^8.0"
+		"orchestra/testbench": "^5.0",
+		"phpunit/phpunit": "^8.5"
 	},
 	"autoload": {
 		"psr-4": {
