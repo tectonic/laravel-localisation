@@ -1,5 +1,5 @@
 <?php
-namespace tests\Database;
+namespace Tests\Database;
 
 use Mockery as m;
 use Tectonic\LaravelLocalisation\Database\TranslationService;
@@ -11,7 +11,6 @@ class TranslationServiceTest extends TestCase
 {
     public function testFind()
     {
-        self::expectNotToPerformAssertions();
         $repository = m::spy(TranslationRepository::class);
         $service = new TranslationService($repository);
 
@@ -22,7 +21,6 @@ class TranslationServiceTest extends TestCase
 
     public function testFindAll()
     {
-        self::expectNotToPerformAssertions();
         $repository = m::spy(TranslationRepository::class);
         $service = new TranslationService($repository);
 
@@ -44,11 +42,9 @@ class TranslationServiceTest extends TestCase
         $this->assertEquals($translation, $service->create($model, 'en', 'name', 'colours'));
     }
 
-    /**
-     * @expectedException Tectonic\LaravelLocalisation\Database\TranslationNotFound
-     */
     public function testTranslationUpdateWithNullTranslation()
     {
+        $this->expectException(\Tectonic\LaravelLocalisation\Database\TranslationNotFound::class);
         $repository = m::mock(TranslationRepository::class);
         $repository->shouldReceive('getByCriteria')->once()->andReturn(null);
         $service = new TranslationService($repository);
