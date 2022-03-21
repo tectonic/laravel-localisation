@@ -16,6 +16,10 @@ You can view the rest of the documentation here: (https://github.com/tectonic/la
 
 ## Changelog
 
+### 2.0.0
+
+* Support for Laravel 8
+
 ### 1.3.2
 
 * Small fix for publishing configuration
