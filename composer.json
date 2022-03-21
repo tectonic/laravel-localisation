@@ -8,15 +8,15 @@
 		}
 	],
 	"require": {
-		"php": ">=7.0.0",
-		"illuminate/support": "5.*",
-		"illuminate/database": "5.*",
-		"tectonic/localisation": "^2.0.3"
+		"php": "^7.4|^8.0",
+		"illuminate/support": "^8.0",
+		"illuminate/database": "^8.0",
+		"tectonic/localisation": "^3.0"
 	},
 	"require-dev": {
-		"mockery/mockery": "dev-master@dev",
-		"orchestra/testbench": "3.*",
-		"phpunit/phpunit": "~5.7"
+		"mockery/mockery": "^1.4",
+		"orchestra/testbench": "*",
+		"phpunit/phpunit": "^9.0"
 	},
 	"autoload": {
 		"psr-4": {
@@ -28,5 +28,8 @@
 			"Tests\\": "tests/"
 		}
 	},
-	"minimum-stability": "stable"
+	"config": {
+		"preferred-install": "dist",
+		"sort-packages": true
+	}
 }

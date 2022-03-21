@@ -1,5 +1,5 @@
 <?php
-namespace tests\Stubs;
+namespace Tests\Stubs;
 
 use Tectonic\Localisation\Contracts\Translatable;
 use Tectonic\Localisation\Translator\Translations;
@@ -18,5 +18,9 @@ class Model implements Translatable
     public function getTranslatableFields()
     {
         return ['name'];
+    }
+    
+    public function touch()
+    {
     }
 }

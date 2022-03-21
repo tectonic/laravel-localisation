@@ -24,10 +24,11 @@ class PaginationTransformer implements Transformer
     /**
      * Once a transformer for an object has been found, it then must do whatever work is necessary on that object.
      *
-     * @param object $paginator
+     * @param  object  $paginator
+     * @param  null  $language
      * @return mixed
      */
-    public function transform($paginator)
+    public function transform($paginator, $language = null)
     {
         $transformer = App::make(CollectionTransformer::class);
 
@@ -40,12 +41,14 @@ class PaginationTransformer implements Transformer
     /**
      * Same as transform but should only translate objects one-level deep.
      *
-     * @param object $paginator
+     * @param  object  $paginator
+     * @param  null  $language
+     * @param  array  $fields
      * @return mixed
      */
-    public function shallow($paginator)
+    public function shallow($paginator, $language = null, $fields = [])
     {
-        return $this->transform($paginator);
+        return $this->transform($paginator, $language);
     }
 
     /**

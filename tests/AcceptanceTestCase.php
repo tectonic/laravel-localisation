@@ -9,7 +9,7 @@ class AcceptanceTestCase extends TestCase
 {
     use Testable;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
