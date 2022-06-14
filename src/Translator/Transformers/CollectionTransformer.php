@@ -1,15 +1,16 @@
 <?php
 namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
-use Tectonic\LaravelLocalisation\Translator\Translated\Collection as TranslatedCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Tectonic\LaravelLocalisation\Database\Translation;
 use Tectonic\Localisation\Contracts\Transformer;
 use Tectonic\Localisation\Translator\Transformers\Transformer as BaseTransformer;
 
 class CollectionTransformer extends BaseTransformer implements Transformer
 {
     /**
-     * This transformer is only appropriate for eloquent collection objects.
+     * This transformer is only appropriate for collection objects.
      *
      * @param $object
      * @return mixed
@@ -50,7 +51,7 @@ class CollectionTransformer extends BaseTransformer implements Transformer
      *
      * @param $collection
      * @param boolean $shallow
-     * @return TranslatedCollection
+     * @return Collection
      */
     private function translate($collection, $shallow)
     {
@@ -85,14 +86,64 @@ class CollectionTransformer extends BaseTransformer implements Transformer
      * @param Collection $collection
      * @param Collection $translations
      * @param bool $shallow
-     * @return TranslatedCollection
+     *
+     * @return Collection
      */
-    public function applyTranslations(Collection $collection, Collection $translations, $shallow)
+    public function applyTranslations(Collection $collection, Collection $translations, bool $shallow)
     {
+        $translations = $translations->groupBy(fn ($translation) => $this->groupByKey($translation));
+
         foreach ($collection as $model) {
-            app(ModelTransformer::class)->applyTranslations($model, $translations, $shallow);
+            if (($modelTranslations = $this->modelTranslations($translations, $model, $shallow))->isNotEmpty()) {
+                app(ModelTransformer::class)->applyTranslations($model, $modelTranslations, $shallow);
+            }
         }
 
         return $collection;
+    }
+
+    protected function modelTranslations(Collection $translations, Model $model, bool $shallow = false)
+    {
+        $relationTranslations = ($translations->get($this->groupByKey($model), collect()))->toBase();
+
+        if (!$shallow && $relations = array_filter($model->getRelations())) {
+            $relationTranslations = $relationTranslations->merge(
+                $this->parseRelationsTranslations($relations, $translations)
+            );
+        }
+
+        return new \Illuminate\Database\Eloquent\Collection(
+            $relationTranslations
+                ->filter()
+                ->flatten()
+        );
+    }
+    
+    protected function parseRelationsTranslations(array $relations, Collection $translations): Collection
+    {
+        $relationTranslations = collect();
+        foreach ($relations as $relation) {
+            if ($relation instanceof Collection) {
+                foreach ($relation as $item) {
+                    $relationTranslations = $relationTranslations->merge(
+                        $this->modelTranslations($translations, $item)
+                            ->groupBy(fn ($item) => $this->groupByKey($item))
+                    );
+                }
+            } else {
+                $relationTranslations->push($translations->get($this->groupByKey($relation)));
+            }
+        }
+        
+        return $relationTranslations;
+    }
+
+    protected function groupByKey($item)
+    {
+        if ($item instanceof Translation || $item instanceof \stdClass) {
+            return $item->foreign_id.$item->resource;
+        }
+
+        return $item->id.class_basename($item);
     }
 }
