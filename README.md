@@ -16,6 +16,10 @@ You can view the rest of the documentation here: (https://github.com/tectonic/la
 
 ## Changelog
 
+### 2.0.1
+
+* Fixed a [performance issue](https://github.com/tectonic/laravel-localisation/issues/1)
+
 ### 2.0.0
 
 * Support for Laravel 8
