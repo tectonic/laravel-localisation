@@ -133,7 +133,9 @@ class CollectionTransformer extends BaseTransformer implements Transformer
             } else {
                 $relationTranslations->push($translations->get($this->groupByKey($relation)));
                 if (array_filter($relation->getRelations())) {
-                    $relationTranslations = $relationTranslations->merge($this->parseRelationsTranslations($relation->getRelations(), $translations));
+                    $relationTranslations = $relationTranslations->merge(
+                        $this->parseRelationsTranslations($relation->getRelations(), $translations)
+                    );
                 }
             }
         }
