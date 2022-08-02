@@ -5,27 +5,16 @@ use Tectonic\LaravelLocalisation\Database\TranslationRetriever;
 use Tectonic\Localisation\Contracts\Translatable;
 use Tectonic\Localisation\Translator\Translations;
 
-class Content extends \Eloquent implements Translatable
+class Link extends \Eloquent implements Translatable
 {
     use Translations;
     use TranslationRetriever;
 
-    public $table = 'content';
-
-	public function category()
+	public function content()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Content::class);
     }
     
-    public function links()
-    {
-        return $this->hasMany(Link::class);
-    }
-
-    public function author()
-    {
-        return $this->belongsTo(Author::class);
-    }
 
     /**
      * Returns an array of the field names that can be used for translations.

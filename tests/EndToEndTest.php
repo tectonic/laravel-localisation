@@ -4,8 +4,11 @@ namespace Tests;
 use Illuminate\Support\Facades\App;
 use Tectonic\LaravelLocalisation\Database\Translation;
 use Tectonic\LaravelLocalisation\Facades\Translator;
+use Tests\Fixtures\Models\Author;
 use Tests\Fixtures\Models\Category;
 use Tests\Fixtures\Models\Content;
+use Tests\Fixtures\Models\Link;
+use Tests\Fixtures\Models\Post;
 
 class EndToEndTest extends AcceptanceTestCase
 {
@@ -16,6 +19,12 @@ class EndToEndTest extends AcceptanceTestCase
     private $content3;
     private $content4;
     private $content5;
+    private $author1;
+    private $author2;
+    private $post1;
+    private $post2;
+    private $post3;
+    private $post4;
 
     public function init()
     {
@@ -23,8 +32,17 @@ class EndToEndTest extends AcceptanceTestCase
         // full end-to-end test of data, relationships translations and more.
         $this->createCategories();
 
+        // Setup authors
+        $this->createAuthors();
+
         // Setup the content
         $this->createContent();
+
+        // Setup the links
+        $this->createLinks();
+
+        // Setup the posts
+        $this->createPosts();
 
         // Now let's setup translations for various pieces of categories and content
         $this->createTranslations();
@@ -69,6 +87,40 @@ class EndToEndTest extends AcceptanceTestCase
     }
 
     /**
+     * Tests translations on deep relationships from collection.
+     */
+    public function testTranslationsForCollectionDeepRelationships()
+    {
+        $category = Category::with(['content', 'content.links', 'content.author', 'content.author.posts'])->get();
+
+        $translated = Translator::translate($category)->first();
+
+        $this->assertCount(2, $translated->content);
+        $this->assertCount(2, $translated->content[0]->links);
+        $this->assertEquals('This is what we shall do', $translated->content[0]->trans('en_GB', 'title'));
+        $this->assertEquals('This is a link', $translated->content[0]->links[0]->trans('en_GB', 'title'));
+        $this->assertEquals('Author 1 summary', $translated->content[0]->author->trans('en_GB', 'summary'));
+        $this->assertEquals('This is a title 1', $translated->content[0]->author->posts[0]->trans('en_GB', 'title'));
+    }
+
+    /**
+     * Tests translations on deep relationships from model that have deep relationships.
+     */
+    public function testTranslationsForModelDeepRelationships()
+    {
+        $category = Category::with(['content', 'content.links', 'content.author', 'content.author.posts'])->find($this->category2->id);
+
+        $translated = Translator::translate($category);
+
+        $this->assertCount(3, $translated->content);
+        $this->assertCount(2, $translated->content[0]->links);
+        $this->assertEquals('This is what we shall do', $translated->content[0]->trans('en_GB', 'title'));
+        $this->assertEquals('This is a link', $translated->content[0]->links[0]->trans('en_GB', 'title'));
+        $this->assertEquals('Author 2 summary', $translated->content[0]->author->trans('en_GB', 'summary'));
+        $this->assertEquals('This is a title 3', $translated->content[0]->author->posts[0]->trans('en_GB', 'title'));
+    }
+
+    /**
      * Tests translations for nested relationship collections.
      */
     public function testTranslationsForCollectionsOfCollections()
@@ -91,16 +143,54 @@ class EndToEndTest extends AcceptanceTestCase
     }
 
     /**
+     * Create the authors required for the tests.
+     */
+    private function createAuthors()
+    {
+        $this->author1 = Author::create([]);
+        $this->author2 = Author::create([]);
+    }
+
+    /**
      * Create the content data required for the tests.
      */
     private function createContent()
     {
-        $this->content1 = $this->category1->content()->save(new Content);
-        $this->content2 = $this->category1->content()->save(new Content);
-        $this->content3 = $this->category2->content()->save(new Content);
-        $this->content4 = $this->category2->content()->save(new Content);
-        $this->content5 = $this->category2->content()->save(new Content);
+        $this->author1->content()->save($this->content1 = $this->category1->content()->save(new Content));
+        $this->author2->content()->save($this->content2 = $this->category1->content()->save(new Content));
+        $this->author2->content()->save($this->content3 = $this->category2->content()->save(new Content));
+        $this->author2->content()->save($this->content4 = $this->category2->content()->save(new Content));
+        $this->author2->content()->save($this->content5 = $this->category2->content()->save(new Content));
     }
+
+    /**
+     * Create the link data required for the tests.
+     */
+    private function createLinks()
+    {
+        $this->content1->links()->save(new Link);
+        $this->content1->links()->save(new Link);
+        $this->content2->links()->save(new Link);
+        $this->content2->links()->save(new Link);
+        $this->content3->links()->save(new Link);
+        $this->content3->links()->save(new Link);
+        $this->content4->links()->save(new Link);
+        $this->content4->links()->save(new Link);
+        $this->content5->links()->save(new Link);
+        $this->content5->links()->save(new Link);
+    }
+
+    /**
+     * Create the posts required for the tests.
+     */
+    private function createPosts()
+    {
+        $this->author1->posts()->save($this->post1 = new Post);
+        $this->author1->posts()->save($this->post2 = new Post);
+        $this->author2->posts()->save($this->post3 = new Post);
+        $this->author2->posts()->save($this->post4 = new Post);
+    }
+
 
     /**
      * Create the translations for categories and content.
@@ -146,5 +236,110 @@ class EndToEndTest extends AcceptanceTestCase
             'field' => 'title',
             'value' => 'This is what we shall do'
         ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Content',
+            'foreign_id' => $this->content2->id,
+            'field' => 'title',
+            'value' => 'This is what we shall do'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Content',
+            'foreign_id' => $this->content3->id,
+            'field' => 'title',
+            'value' => 'This is what we shall do'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Content',
+            'foreign_id' => $this->content4->id,
+            'field' => 'title',
+            'value' => 'This is what we shall do'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Author',
+            'foreign_id' => $this->author1->id,
+            'field' => 'summary',
+            'value' => 'Author 1 summary'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Author',
+            'foreign_id' => $this->author2->id,
+            'field' => 'summary',
+            'value' => 'Author 2 summary'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Link',
+            'foreign_id' => $this->content1->links[0]->id,
+            'field' => 'title',
+            'value' => 'This is a link'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Link',
+            'foreign_id' => $this->content2->links[1]->id,
+            'field' => 'title',
+            'value' => 'This is a link'
+        ]);
+        
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Link',
+            'foreign_id' => $this->content3->links[0]->id,
+            'field' => 'title',
+            'value' => 'This is a link'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Link',
+            'foreign_id' => $this->content4->links[1]->id,
+            'field' => 'title',
+            'value' => 'This is a link'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Post',
+            'foreign_id' => $this->post1->id,
+            'field' => 'title',
+            'value' => 'This is a title 1'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Post',
+            'foreign_id' => $this->post2->id,
+            'field' => 'title',
+            'value' => 'This is a title 2'
+        ]);
+
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Post',
+            'foreign_id' => $this->post3->id,
+            'field' => 'title',
+            'value' => 'This is a title 3'
+        ]);
+        
+        Translation::create([
+            'language' => 'en_GB',
+            'resource' => 'Post',
+            'foreign_id' => $this->post4->id,
+            'field' => 'title',
+            'value' => 'This is a title 4'
+        ]);
+        
     }
 }

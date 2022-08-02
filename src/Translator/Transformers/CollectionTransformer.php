@@ -118,7 +118,7 @@ class CollectionTransformer extends BaseTransformer implements Transformer
                 ->flatten()
         );
     }
-    
+
     protected function parseRelationsTranslations(array $relations, Collection $translations): Collection
     {
         $relationTranslations = collect();
@@ -132,9 +132,12 @@ class CollectionTransformer extends BaseTransformer implements Transformer
                 }
             } else {
                 $relationTranslations->push($translations->get($this->groupByKey($relation)));
+                if (array_filter($relation->getRelations())) {
+                    $relationTranslations = $relationTranslations->merge($this->parseRelationsTranslations($relation->getRelations(), $translations));
+                }
             }
         }
-        
+
         return $relationTranslations;
     }
 

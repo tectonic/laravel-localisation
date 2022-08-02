@@ -5,26 +5,19 @@ use Tectonic\LaravelLocalisation\Database\TranslationRetriever;
 use Tectonic\Localisation\Contracts\Translatable;
 use Tectonic\Localisation\Translator\Translations;
 
-class Content extends \Eloquent implements Translatable
+class Author extends \Eloquent implements Translatable
 {
     use Translations;
     use TranslationRetriever;
 
-    public $table = 'content';
-
-	public function category()
+	public function content()
     {
-        return $this->belongsTo(Category::class);
-    }
-    
-    public function links()
-    {
-        return $this->hasMany(Link::class);
+        return $this->hasMany(Content::class);
     }
 
-    public function author()
+    public function posts()
     {
-        return $this->belongsTo(Author::class);
+        return $this->hasMany(Post::class);
     }
 
     /**
@@ -34,6 +27,6 @@ class Content extends \Eloquent implements Translatable
      */
     public function getTranslatableFields()
     {
-        return ['title', 'description'];
+        return ['summary'];
     }
 }

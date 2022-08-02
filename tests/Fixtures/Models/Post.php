@@ -5,21 +5,14 @@ use Tectonic\LaravelLocalisation\Database\TranslationRetriever;
 use Tectonic\Localisation\Contracts\Translatable;
 use Tectonic\Localisation\Translator\Translations;
 
-class Content extends \Eloquent implements Translatable
+class Post extends \Eloquent implements Translatable
 {
     use Translations;
     use TranslationRetriever;
 
-    public $table = 'content';
-
 	public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-    
-    public function links()
-    {
-        return $this->hasMany(Link::class);
     }
 
     public function author()
