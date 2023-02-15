@@ -130,7 +130,7 @@ class CollectionTransformer extends BaseTransformer implements Transformer
                             ->groupBy(fn ($item) => $this->groupByKey($item))
                     );
                 }
-            } else {
+            } elseif ($relation) {
                 $relationTranslations->push($translations->get($this->groupByKey($relation)));
                 if (array_filter($relation->getRelations())) {
                     $relationTranslations = $relationTranslations->merge(
