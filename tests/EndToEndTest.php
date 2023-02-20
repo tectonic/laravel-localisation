@@ -93,11 +93,7 @@ class EndToEndTest extends AcceptanceTestCase
     public function testTranslationsForCollectionDeepRelationships()
     {
         $category = Category::with(['content', 'content.links', 'content.author', 'content.author.posts'])->get();
-
-        Post::all()->each(function ($post) {
-            $post->delete();
-        });
-        $translated = Translator::translate($category->load())->first();
+        $translated = Translator::translate($category)->first();
 
         $this->assertCount(2, $translated->content);
         $this->assertCount(2, $translated->content[0]->links);
@@ -116,7 +112,7 @@ class EndToEndTest extends AcceptanceTestCase
 
         $translated = Translator::translate($category);
 
-        $this->assertCount(3, $translated->content);
+        $this->assertCount(4, $translated->content);
         $this->assertCount(2, $translated->content[0]->links);
         $this->assertEquals('This is what we shall do', $translated->content[0]->trans('en_GB', 'title'));
         $this->assertEquals('This is a link', $translated->content[0]->links[0]->trans('en_GB', 'title'));
@@ -126,35 +122,17 @@ class EndToEndTest extends AcceptanceTestCase
 
     public function testTranslationsForModelDeepRelationshipsWithMissingRelation()
     {
-        $reviewer = new Reviewer;
+        $links = Link::with(['content', 'content.links.reviewer', 'content.author'])->get();
+        $translated = Translator::translate($links);
 
-        Link::find(2)->reviewer()->save($reviewer);
-
-        $coll = Author::with([
-                                 'content',
-//             'content.category',
-                                 'content.links',
-                                 'content.links.reviewer',
-                                 'content.links.content'
-
-                             ])->paginate(1);
-
-        dd($coll);
-
-        Translator::translate($coll);
-//        $collection = Post::with(['category', 'category.content', 'category.content.links', 'category.content.author'])->paginate(1);
-//
-//        dd($collection);
-//        $translated = Translator::translate($collection);
-
-//        dd($translated->getRelations());
-
-//        $this->assertCount(3, $translated->content);
-//        $this->assertCount(2, $translated->content[0]->links);
-//        $this->assertEquals('This is what we shall do', $translated->content[0]->trans('en_GB', 'title'));
-//        $this->assertEquals('This is a link', $translated->content[0]->links[0]->trans('en_GB', 'title'));
-//        $this->assertEquals('Author 2 summary', $translated->content[0]->author->trans('en_GB', 'summary'));
-//        $this->assertEquals('This is a title 3', $translated->content[0]->author->posts[0]->trans('en_GB', 'title'));
+        $this->assertCount(11, $translated);
+        $link = $translated->first();
+        $this->assertCount(2, $link->content->links);
+        $this->assertEquals('This is a link', $link->trans('en_GB', 'title'));
+        $this->assertEquals('This is what we shall do', $link->content->trans('en_GB', 'title'));
+        $this->assertEquals('This is a link',$link->content->links[0]->trans('en_GB', 'title'));
+        $this->assertEquals('Author 1 summary', $link->content->author->trans('en_GB', 'summary'));
+        $this->assertNull($link->content->author->posts[0]->trans('en_GB', 'title'));
     }
 
     /**
@@ -198,6 +176,7 @@ class EndToEndTest extends AcceptanceTestCase
         $this->author2->content()->save($this->content3 = $this->category2->content()->save(new Content));
         $this->author2->content()->save($this->content4 = $this->category2->content()->save(new Content));
         $this->author2->content()->save($this->content5 = $this->category2->content()->save(new Content));
+        $this->content6 = $this->category2->content()->save(new Content);
     }
 
     /**
@@ -215,6 +194,7 @@ class EndToEndTest extends AcceptanceTestCase
         $this->content4->links()->save(new Link);
         $this->content5->links()->save(new Link);
         $this->content5->links()->save(new Link);
+        $this->content6->links()->save(new Link);
     }
 
     /**

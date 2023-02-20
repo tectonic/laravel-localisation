@@ -131,18 +131,13 @@ class CollectionTransformer extends BaseTransformer implements Transformer
                             ->groupBy(fn ($item) => $this->groupByKey($item))
                     );
                 }
-            } else {
+            } elseif(!is_null($relation)) {
                 $relationTranslations->push($translations->get($this->groupByKey($relation)));
-
-                if ($relation === null) {
-                    dd('Relation is null', $relation, $translations);
-                }
-
-                if (array_filter($relation->getRelations())) {
-                    //dd($relation);
+ 
+                if ($deepRelations = array_filter($relation->getRelations())) {
 
                     $relationTranslations = $relationTranslations->merge(
-                        $this->parseRelationsTranslations($relation->getRelations(), $translations)
+                        $this->parseRelationsTranslations($deepRelations, $translations)
                     );
                 }
             }
