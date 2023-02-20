@@ -9,6 +9,7 @@ use Tests\Fixtures\Models\Category;
 use Tests\Fixtures\Models\Content;
 use Tests\Fixtures\Models\Link;
 use Tests\Fixtures\Models\Post;
+use Tests\Fixtures\Models\Reviewer;
 
 class EndToEndTest extends AcceptanceTestCase
 {
@@ -93,7 +94,10 @@ class EndToEndTest extends AcceptanceTestCase
     {
         $category = Category::with(['content', 'content.links', 'content.author', 'content.author.posts'])->get();
 
-        $translated = Translator::translate($category)->first();
+        Post::all()->each(function ($post) {
+            $post->delete();
+        });
+        $translated = Translator::translate($category->load())->first();
 
         $this->assertCount(2, $translated->content);
         $this->assertCount(2, $translated->content[0]->links);
@@ -118,6 +122,39 @@ class EndToEndTest extends AcceptanceTestCase
         $this->assertEquals('This is a link', $translated->content[0]->links[0]->trans('en_GB', 'title'));
         $this->assertEquals('Author 2 summary', $translated->content[0]->author->trans('en_GB', 'summary'));
         $this->assertEquals('This is a title 3', $translated->content[0]->author->posts[0]->trans('en_GB', 'title'));
+    }
+
+    public function testTranslationsForModelDeepRelationshipsWithMissingRelation()
+    {
+        $reviewer = new Reviewer;
+
+        Link::find(2)->reviewer()->save($reviewer);
+
+        $coll = Author::with([
+                                 'content',
+//             'content.category',
+                                 'content.links',
+                                 'content.links.reviewer',
+                                 'content.links.content'
+
+                             ])->paginate(1);
+
+        dd($coll);
+
+        Translator::translate($coll);
+//        $collection = Post::with(['category', 'category.content', 'category.content.links', 'category.content.author'])->paginate(1);
+//
+//        dd($collection);
+//        $translated = Translator::translate($collection);
+
+//        dd($translated->getRelations());
+
+//        $this->assertCount(3, $translated->content);
+//        $this->assertCount(2, $translated->content[0]->links);
+//        $this->assertEquals('This is what we shall do', $translated->content[0]->trans('en_GB', 'title'));
+//        $this->assertEquals('This is a link', $translated->content[0]->links[0]->trans('en_GB', 'title'));
+//        $this->assertEquals('Author 2 summary', $translated->content[0]->author->trans('en_GB', 'summary'));
+//        $this->assertEquals('This is a title 3', $translated->content[0]->author->posts[0]->trans('en_GB', 'title'));
     }
 
     /**
@@ -292,7 +329,7 @@ class EndToEndTest extends AcceptanceTestCase
             'field' => 'title',
             'value' => 'This is a link'
         ]);
-        
+
         Translation::create([
             'language' => 'en_GB',
             'resource' => 'Link',
@@ -332,7 +369,7 @@ class EndToEndTest extends AcceptanceTestCase
             'field' => 'title',
             'value' => 'This is a title 3'
         ]);
-        
+
         Translation::create([
             'language' => 'en_GB',
             'resource' => 'Post',
@@ -340,6 +377,6 @@ class EndToEndTest extends AcceptanceTestCase
             'field' => 'title',
             'value' => 'This is a title 4'
         ]);
-        
+
     }
 }

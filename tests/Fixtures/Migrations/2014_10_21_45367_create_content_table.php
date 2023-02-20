@@ -15,7 +15,7 @@ class CreateContentTable extends Migration {
 		Schema::create('content', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->integer('category_id')->index();
+            $table->integer('category_id')->index()->nullable();
             $table->integer('author_id')->nullable()->index();
             $table->timestamps();
 
