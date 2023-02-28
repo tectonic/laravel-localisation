@@ -121,6 +121,7 @@ class CollectionTransformer extends BaseTransformer implements Transformer
 
     protected function parseRelationsTranslations(array $relations, Collection $translations): Collection
     {
+
         $relationTranslations = collect();
         foreach ($relations as $relation) {
             if ($relation instanceof Collection) {
@@ -130,11 +131,13 @@ class CollectionTransformer extends BaseTransformer implements Transformer
                             ->groupBy(fn ($item) => $this->groupByKey($item))
                     );
                 }
-            } else {
+            } elseif(!is_null($relation)) {
                 $relationTranslations->push($translations->get($this->groupByKey($relation)));
-                if (array_filter($relation->getRelations())) {
+ 
+                if ($deepRelations = array_filter($relation->getRelations())) {
+
                     $relationTranslations = $relationTranslations->merge(
-                        $this->parseRelationsTranslations($relation->getRelations(), $translations)
+                        $this->parseRelationsTranslations($deepRelations, $translations)
                     );
                 }
             }
