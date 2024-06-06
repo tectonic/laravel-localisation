@@ -76,11 +76,15 @@ class ServiceProvider extends LaravelServiceProvider
     {
         $this->app->scoped('localisation.translator', function($app) {
             $translatorEngine = new Engine;
-
+            
             $translatorEngine->registerTransformer(
                 $app->make(ModelTransformer::class),
                 $app->make(CollectionTransformer::class),
-                $app->make(PaginationTransformer::class)
+                $app->make(PaginationTransformer::class),
+                ...array_map(
+                    fn ($transformer) => $app->make($transformer),
+                    $app['config']->get('localisation.transformers', [])
+                )
             );
 
             return $translatorEngine;
