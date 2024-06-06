@@ -10,6 +10,11 @@ Install via composer:
 
     composer require tectonic/laravel-localisation
     
+Publish the configuration
+
+```shell
+php artisan vendor:publish --provider="Tectonic\LaravelLocalisation\ServiceProvider"
+```
 ## Documentation
 
 You can view the rest of the documentation here: (https://github.com/tectonic/laravel-localisation/wiki)
