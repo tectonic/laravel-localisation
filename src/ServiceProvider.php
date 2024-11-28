@@ -34,7 +34,7 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerTranslationRepository()
     {
-        $this->app->singleton(TranslationRepository::class, function($app) {
+        $this->app->scoped(TranslationRepository::class, function($app) {
             $model = $app['config']->get('localisation.model');
 
             return new EloquentTranslationRepository(new $model);
@@ -47,7 +47,7 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerModelTransformer()
     {
-        $this->app->singleton(ModelTransformer::class, function($app) {
+        $this->app->scoped(ModelTransformer::class, function($app) {
             $modelTransformer = new ModelTransformer;
             $modelTransformer->setTranslationRepository($app->make(TranslationRepository::class));
 
@@ -61,7 +61,7 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerCollectionTransformer()
     {
-        $this->app->singleton(CollectionTransformer::class, function($app) {
+        $this->app->scoped(CollectionTransformer::class, function($app) {
             $collectionTransformer = new CollectionTransformer;
             $collectionTransformer->setTranslationRepository($app->make(TranslationRepository::class));
 
@@ -74,13 +74,17 @@ class ServiceProvider extends LaravelServiceProvider
      */
     private function registerTranslator()
     {
-        $this->app->singleton('localisation.translator', function($app) {
+        $this->app->scoped('localisation.translator', function($app) {
             $translatorEngine = new Engine;
-
+            
             $translatorEngine->registerTransformer(
                 $app->make(ModelTransformer::class),
                 $app->make(CollectionTransformer::class),
-                $app->make(PaginationTransformer::class)
+                $app->make(PaginationTransformer::class),
+                ...array_map(
+                    fn ($transformer) => $app->make($transformer),
+                    $app['config']->get('localisation.transformers', [])
+                )
             );
 
             return $translatorEngine;
