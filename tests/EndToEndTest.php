@@ -1,7 +1,7 @@
 <?php
+
 namespace Tests;
 
-use Illuminate\Support\Facades\App;
 use Tectonic\LaravelLocalisation\Database\Translation;
 use Tectonic\LaravelLocalisation\Facades\Translator;
 use Tests\Fixtures\Models\Author;
@@ -9,7 +9,6 @@ use Tests\Fixtures\Models\Category;
 use Tests\Fixtures\Models\Content;
 use Tests\Fixtures\Models\Link;
 use Tests\Fixtures\Models\Post;
-use Tests\Fixtures\Models\Reviewer;
 
 class EndToEndTest extends AcceptanceTestCase
 {
@@ -130,9 +129,36 @@ class EndToEndTest extends AcceptanceTestCase
         $this->assertCount(2, $link->content->links);
         $this->assertEquals('This is a link', $link->trans('en_GB', 'title'));
         $this->assertEquals('This is what we shall do', $link->content->trans('en_GB', 'title'));
-        $this->assertEquals('This is a link',$link->content->links[0]->trans('en_GB', 'title'));
+        $this->assertEquals('This is a link', $link->content->links[0]->trans('en_GB', 'title'));
         $this->assertEquals('Author 1 summary', $link->content->author->trans('en_GB', 'summary'));
         $this->assertNull($link->content->author->posts[0]->trans('en_GB', 'title'));
+    }
+
+    /**
+     * Tests that passing a language to translate() sets preferredLanguage on the model
+     * and its eager-loaded relations.
+     */
+    public function testTranslateWithLanguageSetsPreferredLanguageOnModelAndRelations()
+    {
+        $content = Content::with('category')->find($this->content1->id);
+        $translated = Translator::translate($content, 'en_US');
+
+        // The model should have preferredLanguage set
+        $this->assertSame('en_US', $translated->preferredLanguage);
+
+        // The eager-loaded relation should also have preferredLanguage set
+        $this->assertSame('en_US', $translated->category->preferredLanguage);
+    }
+
+    /**
+     * Tests that translate() without a language does NOT set preferredLanguage.
+     */
+    public function testTranslateWithoutLanguageDoesNotSetPreferredLanguage()
+    {
+        $content = Content::with('category')->find($this->content1->id);
+        $translated = Translator::translate($content);
+
+        $this->assertNull($translated->preferredLanguage ?? null);
     }
 
     /**
@@ -208,7 +234,6 @@ class EndToEndTest extends AcceptanceTestCase
         $this->author2->posts()->save($this->post4 = new Post);
     }
 
-
     /**
      * Create the translations for categories and content.
      */
@@ -219,7 +244,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Category',
             'foreign_id' => $this->category1->id,
             'field' => 'title',
-            'value' => 'Tucker'
+            'value' => 'Tucker',
         ]);
 
         Translation::create([
@@ -227,7 +252,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Category',
             'foreign_id' => $this->category1->id,
             'field' => 'title',
-            'value' => 'Food'
+            'value' => 'Food',
         ]);
 
         Translation::create([
@@ -235,7 +260,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Category',
             'foreign_id' => $this->category2->id,
             'field' => 'title',
-            'value' => 'Football'
+            'value' => 'Football',
         ]);
 
         Translation::create([
@@ -243,7 +268,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Category',
             'foreign_id' => $this->category2->id,
             'field' => 'title',
-            'value' => 'Soccer'
+            'value' => 'Soccer',
         ]);
 
         Translation::create([
@@ -251,7 +276,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Content',
             'foreign_id' => $this->content1->id,
             'field' => 'title',
-            'value' => 'This is what we shall do'
+            'value' => 'This is what we shall do',
         ]);
 
         Translation::create([
@@ -259,7 +284,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Content',
             'foreign_id' => $this->content2->id,
             'field' => 'title',
-            'value' => 'This is what we shall do'
+            'value' => 'This is what we shall do',
         ]);
 
         Translation::create([
@@ -267,7 +292,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Content',
             'foreign_id' => $this->content3->id,
             'field' => 'title',
-            'value' => 'This is what we shall do'
+            'value' => 'This is what we shall do',
         ]);
 
         Translation::create([
@@ -275,7 +300,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Content',
             'foreign_id' => $this->content4->id,
             'field' => 'title',
-            'value' => 'This is what we shall do'
+            'value' => 'This is what we shall do',
         ]);
 
         Translation::create([
@@ -283,7 +308,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Author',
             'foreign_id' => $this->author1->id,
             'field' => 'summary',
-            'value' => 'Author 1 summary'
+            'value' => 'Author 1 summary',
         ]);
 
         Translation::create([
@@ -291,7 +316,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Author',
             'foreign_id' => $this->author2->id,
             'field' => 'summary',
-            'value' => 'Author 2 summary'
+            'value' => 'Author 2 summary',
         ]);
 
         Translation::create([
@@ -299,7 +324,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Link',
             'foreign_id' => $this->content1->links[0]->id,
             'field' => 'title',
-            'value' => 'This is a link'
+            'value' => 'This is a link',
         ]);
 
         Translation::create([
@@ -307,7 +332,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Link',
             'foreign_id' => $this->content2->links[1]->id,
             'field' => 'title',
-            'value' => 'This is a link'
+            'value' => 'This is a link',
         ]);
 
         Translation::create([
@@ -315,7 +340,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Link',
             'foreign_id' => $this->content3->links[0]->id,
             'field' => 'title',
-            'value' => 'This is a link'
+            'value' => 'This is a link',
         ]);
 
         Translation::create([
@@ -323,7 +348,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Link',
             'foreign_id' => $this->content4->links[1]->id,
             'field' => 'title',
-            'value' => 'This is a link'
+            'value' => 'This is a link',
         ]);
 
         Translation::create([
@@ -331,7 +356,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Post',
             'foreign_id' => $this->post1->id,
             'field' => 'title',
-            'value' => 'This is a title 1'
+            'value' => 'This is a title 1',
         ]);
 
         Translation::create([
@@ -339,7 +364,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Post',
             'foreign_id' => $this->post2->id,
             'field' => 'title',
-            'value' => 'This is a title 2'
+            'value' => 'This is a title 2',
         ]);
 
         Translation::create([
@@ -347,7 +372,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Post',
             'foreign_id' => $this->post3->id,
             'field' => 'title',
-            'value' => 'This is a title 3'
+            'value' => 'This is a title 3',
         ]);
 
         Translation::create([
@@ -355,7 +380,7 @@ class EndToEndTest extends AcceptanceTestCase
             'resource' => 'Post',
             'foreign_id' => $this->post4->id,
             'field' => 'title',
-            'value' => 'This is a title 4'
+            'value' => 'This is a title 4',
         ]);
 
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Fixtures\Models;
 
 use Tectonic\LaravelLocalisation\Database\TranslationRetriever;
@@ -7,16 +8,23 @@ use Tectonic\Localisation\Translator\Translations;
 
 class Content extends \Eloquent implements Translatable
 {
-    use Translations;
     use TranslationRetriever;
+    use Translations;
+
+    public ?string $preferredLanguage = null;
+
+    public function setTranslationLanguage(?string $language): void
+    {
+        $this->preferredLanguage = $language;
+    }
 
     public $table = 'content';
 
-	public function category()
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }
-    
+
     public function links()
     {
         return $this->hasMany(Link::class);

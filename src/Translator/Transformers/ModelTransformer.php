@@ -1,11 +1,12 @@
 <?php
+
 namespace Tectonic\LaravelLocalisation\Translator\Transformers;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Tectonic\Localisation\Contracts\Transformer;
-use Tectonic\Localisation\Translator\Transformers\Transformer as BaseTransformer;
 use Tectonic\Localisation\Contracts\Translatable;
+use Tectonic\Localisation\Translator\Transformers\Transformer as BaseTransformer;
 
 class ModelTransformer extends BaseTransformer implements Transformer
 {
@@ -13,7 +14,6 @@ class ModelTransformer extends BaseTransformer implements Transformer
      * Implementations should take an object as a parameter, and then respond with a boolean
      * true or false depending on whether or not they are able to transform that object.
      *
-     * @param $object
      * @return mixed
      */
     public function isAppropriateFor($object)
@@ -30,7 +30,13 @@ class ModelTransformer extends BaseTransformer implements Transformer
      */
     public function transform($model, $language = null)
     {
-        return $this->translate($model, false);
+        $result = $this->translate($model, false);
+
+        if ($language !== null) {
+            $this->applyPreferredLanguage($result, $language);
+        }
+
+        return $result;
     }
 
     /**
@@ -43,14 +49,20 @@ class ModelTransformer extends BaseTransformer implements Transformer
      */
     public function shallow($model, $language = null, $fields = null)
     {
-        return $this->translate($model, true);
+        $result = $this->translate($model, true);
+
+        if ($language !== null) {
+            $this->applyPreferredLanguage($result, $language);
+        }
+
+        return $result;
     }
 
     /**
      * Translates the model and returns the resulting transformed entity.
      *
-     * @param Model $model
-     * @param boolean $shallow
+     * @param  Model  $model
+     * @param  bool  $shallow
      * @return Entity
      */
     public function translate($model, $shallow)
@@ -64,9 +76,9 @@ class ModelTransformer extends BaseTransformer implements Transformer
     /**
      * Returns an array containing the model's resource, and then a child array that contains the model's id.
      *
-     * @param Model $model
-     * @param bool $shallow
+     * @param  bool  $shallow
      * @return array
+     *
      * @throws \Exception
      */
     public function getTranslationResources(Model $model, $shallow = false)
@@ -94,10 +106,9 @@ class ModelTransformer extends BaseTransformer implements Transformer
      * once one matches the given model's class, it will then apply those fields and values for its
      * record. It will then break the loop.
      *
-     * @param Model $model
-     * @param Collection $translations
-     * @param bool $shallow
+     * @param  bool  $shallow
      * @return Entity
+     *
      * @throws \Exception
      */
     public function applyTranslations(Model $model, Collection $translations, $shallow)
@@ -129,7 +140,6 @@ class ModelTransformer extends BaseTransformer implements Transformer
      * the translatable resource name (the base class name) and then use this as the key for the
      * array of ids that will be used to search for translations
      *
-     * @param $model
      * @return array
      */
     private function baseResources($model)
@@ -144,8 +154,8 @@ class ModelTransformer extends BaseTransformer implements Transformer
     /**
      * Deciphers the transformer that can be used for the $item in question.
      *
-     * @param $item
      * @return CollectionTransformer|ModelTransformer
+     *
      * @throws \Exception
      */
     private function resolveTransformer($item)
@@ -164,11 +174,34 @@ class ModelTransformer extends BaseTransformer implements Transformer
     /**
      * Determines whether or not a model has translatable properties.
      *
-     * @param Model $model
      * @return bool
      */
     private function isTranslatable(Model $model)
     {
         return $model instanceof Translatable;
+    }
+
+    /**
+     * Recursively sets the preferred language on the model and all its
+     * eager-loaded relations. This ensures that translatable field access
+     * via __get/__isset uses the specified language instead of the consumer's.
+     */
+    private function applyPreferredLanguage($model, string $language): void
+    {
+        if (method_exists($model, 'setTranslationLanguage')) {
+            $model->setTranslationLanguage($language);
+        }
+
+        foreach ($model->getRelations() as $item) {
+            if (is_null($item)) {
+                continue;
+            }
+
+            if ($item instanceof Model) {
+                $this->applyPreferredLanguage($item, $language);
+            } elseif ($item instanceof Collection) {
+                $item->each(fn($m) => $this->applyPreferredLanguage($m, $language));
+            }
+        }
     }
 }
